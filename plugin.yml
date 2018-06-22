@@ -1,0 +1,31 @@
+name: InvSee
+author: BlockHorizons
+main: BlockHorizons\InvSee\Loader
+api: 3.0.0
+version: 0.0.1
+
+permissions:
+  invsee:
+    default: false
+    description: "Grants access to all InvSee permissions."
+    children:
+      invsee.inventory:
+        default: false
+        description: "Grants complete access to managing another player's inventory."
+        children:
+          invsee.inventory.view:
+            default: op
+            description: "Allows viewing a player's inventory."
+          invsee.inventory.modify:
+            default: op
+            description: "Allows modifying a player's inventory."
+      invsee.enderinventory:
+        default: false
+        description: "Grants complete access to managing another player's ender inventory."
+        children:
+          invsee.enderinventory.view:
+            default: op
+            description: "Allows viewing a player's ender inventory."
+          invsee.enderinventory.modify:
+            default: op
+            description: "Allows modifying a player's ender inventory."
