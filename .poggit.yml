@@ -1,0 +1,10 @@
+--- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/BlockHorizons/InvSee
+branches:
+- master
+projects:
+  InvSee:
+    path: ""
+    libs:
+      - src: muqsit/InvMenu/InvMenu
+        version: ^1.1.3
+...
