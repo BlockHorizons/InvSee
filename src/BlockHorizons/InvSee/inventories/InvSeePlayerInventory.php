@@ -13,7 +13,7 @@ use pocketmine\Player;
 use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
-class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInventory{
+class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInventory {
 	use InvSeeInventoryTrait;
 
 	const ARMOR_INVENTORY_MENU_SLOTS = [

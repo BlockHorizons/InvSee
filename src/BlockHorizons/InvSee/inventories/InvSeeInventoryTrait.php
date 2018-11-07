@@ -5,7 +5,7 @@ use BlockHorizons\InvSee\utils\SpyingPlayerData;
 
 use muqsit\invmenu\InvMenu;
 
-trait InvSeeInventoryTrait{
+trait InvSeeInventoryTrait {
 
 	/** @var string */
 	protected $spying;

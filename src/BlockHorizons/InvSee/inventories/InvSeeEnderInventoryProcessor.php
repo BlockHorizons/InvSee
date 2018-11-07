@@ -8,7 +8,7 @@ use pocketmine\item\Item;
 use pocketmine\Player;
 use pocketmine\Server;
 
-class InvSeeEnderInventoryProcessor implements InventoryEventProcessor{
+class InvSeeEnderInventoryProcessor implements InventoryEventProcessor {
 
 	/** @var Player */
 	private $player;

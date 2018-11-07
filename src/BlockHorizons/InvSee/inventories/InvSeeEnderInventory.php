@@ -11,7 +11,7 @@ use pocketmine\nbt\tag\ListTag;
 use pocketmine\Player;
 use pocketmine\Server;
 
-class InvSeeEnderInventory extends ChestInventory implements InvSeeInventory{
+class InvSeeEnderInventory extends ChestInventory implements InvSeeInventory {
 	use InvSeeInventoryTrait;
 
 	public function canSpyInventory(Inventory $inventory): bool {

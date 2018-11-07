@@ -7,7 +7,7 @@ use pocketmine\inventory\Inventory;
 use pocketmine\inventory\transaction\action\SlotChangeAction;
 use pocketmine\Player;
 
-interface InvSeeInventory{
+interface InvSeeInventory {
 
 	/**
 	 * Returns the username of the player
