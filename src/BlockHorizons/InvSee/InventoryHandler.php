@@ -32,7 +32,7 @@ class InventoryHandler {
 		$this->loader = $loader;
 	}
 
-	public function handleJoin(Player $player) : void{
+	public function handleJoin(Player $player): void {
 		if(isset($this->spying[$key = $player->getLowerCaseName()])){
 			$this->spying[$key]->onJoin($player);
 		}
@@ -40,13 +40,13 @@ class InventoryHandler {
 		$player->getEnderChestInventory()->setEventProcessor(new InvSeeEnderInventoryProcessor($player));
 	}
 
-	public function handleQuit(Player $player) : void{
+	public function handleQuit(Player $player): void {
 		if(isset($this->spying[$key = $player->getLowerCaseName()])){
 			$this->spying[$key]->onQuit($player);
 		}
 	}
 
-	public function syncSpyerAction(SlotChangeAction $action) : void{
+	public function syncSpyerAction(SlotChangeAction $action): void {
 		$inventory = $action->getInventory();
 		if(isset($this->spying[$key = $inventory->getSpying()])){
 			$player = $this->spying[$key]->getPlayer();
@@ -56,7 +56,7 @@ class InventoryHandler {
 		}
 	}
 
-	public function syncPlayerAction(Player $player, SlotChangeAction $action) : void{
+	public function syncPlayerAction(Player $player, SlotChangeAction $action): void {
 		$inventory = $action->getInventory();
 		if(isset($this->spying[$key = $player->getLowerCaseName()])){
 			foreach($this->spying[$key]->getAll() as $menu){
@@ -68,7 +68,7 @@ class InventoryHandler {
 		}
 	}
 
-	public function onInventoryClose(Player $player, InvSeeInventory $inventory) : void{
+	public function onInventoryClose(Player $player, InvSeeInventory $inventory): void {
 		if(count($inventory->getViewers()) <= 1){
 			if($this->spying[$key = $inventory->getSpying()]->getPlayer() === null){
 				$inventory->syncOffline();
@@ -78,7 +78,7 @@ class InventoryHandler {
 		}
 	}
 
-	public function send(Player $opener, string $player, string $inventory_class) : bool{
+	public function send(Player $opener, string $player, string $inventory_class): bool {
 		$data = $this->spying[$key = strtolower($player)] ?? ($this->spying[$key] = new SpyingPlayerData($player));
 
 		$menu = $data->get($inventory_class);
@@ -92,7 +92,7 @@ class InventoryHandler {
 		return $menu->send($opener);
 	}
 
-	public function handleSpyInventoryTransaction(Player $player, Item $itemClicked, Item $itemClickedWith, SlotChangeAction $action) : bool{
+	public function handleSpyInventoryTransaction(Player $player, Item $itemClicked, Item $itemClickedWith, SlotChangeAction $action): bool {
 		return $action->getInventory()->canModifySlot($player, $action->getSlot());
 	}
 }

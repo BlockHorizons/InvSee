@@ -116,7 +116,7 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 		}
 	}
 
-	public function sendPermissionMessage(CommandSender $sender) : void{
+	public function sendPermissionMessage(CommandSender $sender): void {
 		$sender->sendMessage(TextFormat::RED . "You don't have permission to use this command.");
 	}
 

@@ -15,7 +15,7 @@ trait InvSeeInventoryTrait{
 		parent::__construct($menu, $this->getSpyerContents(), $size, $title);
 	}
 
-	public function getSpying() : string{
+	public function getSpying(): string {
 		return $this->spying;
 	}
 }

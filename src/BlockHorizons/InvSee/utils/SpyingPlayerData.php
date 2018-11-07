@@ -6,7 +6,7 @@ use muqsit\invmenu\InvMenu;
 use pocketmine\Player;
 use pocketmine\Server;
 
-class SpyingPlayerData{
+class SpyingPlayerData {
 
 	/** @var InvMenu[] */
 	protected $menus = [];
@@ -26,11 +26,11 @@ class SpyingPlayerData{
 		}
 	}
 
-	public function getSpying() : string{
+	public function getSpying(): string {
 		return $this->spying;
 	}
 
-	public function add(InvMenu $menu) : void{
+	public function add(InvMenu $menu): void {
 		if(isset($this->menus[$class = get_class($menu->getInventory())])){
 			throw new \RuntimeError("Tried adding an already existing inventory.");
 		}
@@ -38,31 +38,31 @@ class SpyingPlayerData{
 		$this->menus[$class] = $menu;
 	}
 
-	public function get(string $inventory_class) : ?InvMenu{
+	public function get(string $inventory_class): ?InvMenu {
 		return $this->menus[$inventory_class] ?? null;
 	}
 
-	public function create(string $inventory_class) : InvMenu{
+	public function create(string $inventory_class): InvMenu {
 		$this->add($menu = InvMenu::create($inventory_class, $this));
 		return $menu;
 	}
 
-	public function getAll() : array{
+	public function getAll(): array {
 		return $this->menus;
 	}
 
-	public function onJoin(Player $player) : void{
+	public function onJoin(Player $player): void {
 		$this->rawUUID = $player->getRawUniqueId();
 		foreach($this->getAll() as $menu){
 			$menu->getInventory()->syncOnline($player);
 		}
 	}
 
-	public function onQuit(Player $player) : void{
+	public function onQuit(Player $player): void {
 		$this->rawUUID = null;
 	}
 
-	public function getPlayer() : ?Player{
+	public function getPlayer(): ?Player {
 		return $this->rawUUID !== null ? Server::getInstance()->getPlayerByRawUUID($this->rawUUID) : null;
 	}
 }

@@ -17,7 +17,7 @@ class InvSeeEnderInventoryProcessor implements InventoryEventProcessor{
 		$this->player = $player;
 	}
 
-	public function onSlotChange(Inventory $inventory, int $slot, Item $oldItem, Item $newItem) : ?Item{
+	public function onSlotChange(Inventory $inventory, int $slot, Item $oldItem, Item $newItem): ?Item {
 		Server::getInstance()->getPluginManager()->getPlugin("InvSee")->getInventoryHandler()->syncPlayerAction($this->player, new SlotChangeAction($inventory, $slot, $oldItem, $newItem));
 		return $newItem;
 	}

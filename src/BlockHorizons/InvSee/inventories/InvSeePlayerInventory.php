@@ -23,21 +23,21 @@ class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInvent
 		3 => 51
 	];
 
-	public function canSpyInventory(Inventory $inventory) : bool{
+	public function canSpyInventory(Inventory $inventory): bool {
 		return $inventory instanceof PlayerInventory || $inventory instanceof ArmorInventory;
 	}
 
-	public function canModifySlot(Player $player, int $slot) : bool{
+	public function canModifySlot(Player $player, int $slot): bool {
 		return $player->hasPermission($this->getSpying() === $player->getLowerCaseName() ? "invsee.inventory.modify.self" : "invsee.inventory.modify") && ($slot < 36 || in_array($slot, self::ARMOR_INVENTORY_MENU_SLOTS));
 	}
 
-	public function syncOnline(Player $player) : void{
+	public function syncOnline(Player $player): void {
 		$contents = $this->getContents();
 		$player->getInventory()->setContents(array_slice($contents, 0, $player->getInventory()->getSize()));
 		$player->getArmorInventory()->setContents(array_intersect_key($contents, array_flip(self::ARMOR_INVENTORY_MENU_SLOTS)));
 	}
 
-	public function syncOffline() : void{
+	public function syncOffline(): void {
 		$server = Server::getInstance();
 
 		$contents = [];
@@ -54,7 +54,7 @@ class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInvent
 		$server->saveOfflinePlayerData($this->spying, $nbt);
 	}
 
-	public function syncPlayerAction(SlotChangeAction $action) : void{
+	public function syncPlayerAction(SlotChangeAction $action): void {
 		$inventory = $action->getInventory();
 
 		if($inventory instanceof PlayerInventory){
@@ -64,7 +64,7 @@ class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInvent
 		}
 	}
 
-	public function syncSpyerAction(Player $spying, SlotChangeAction $action) : void{
+	public function syncSpyerAction(Player $spying, SlotChangeAction $action): void {
 		$slot = $action->getSlot();
 
 		if(($armor_slot = array_search($slot, self::ARMOR_INVENTORY_MENU_SLOTS, true)) !== false){
@@ -74,7 +74,7 @@ class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInvent
 		}
 	}
 
-	public function getSpyerContents() : array{
+	public function getSpyerContents(): array {
 		$server = Server::getInstance();
 		$player_instance = $server->getPlayerExact($this->spying);
 

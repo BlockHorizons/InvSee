@@ -15,7 +15,7 @@ interface InvSeeInventory{
 	 *
 	 * @return string
 	 */
-	public function getSpying() : string;
+	public function getSpying(): string;
 
 	/**
 	 * Returns whether this inventory can spy on
@@ -25,7 +25,7 @@ interface InvSeeInventory{
 	 *
 	 * @return bool
 	 */
-	public function canSpyInventory(Inventory $inventory) : bool;
+	public function canSpyInventory(Inventory $inventory): bool;
 
 	/**
 	 * Returns whether this slot can be modified.
@@ -38,19 +38,19 @@ interface InvSeeInventory{
 	 *
 	 * @return bool
 	 */
-	public function canModifySlot(Player $player, int $slot) : bool;
+	public function canModifySlot(Player $player, int $slot): bool;
 
 	/**
 	 * Force syncs player's inventory contents
 	 * with this inventory.
 	 */
-	public function syncOnline(Player $player) : void;
+	public function syncOnline(Player $player): void;
 
 	/**
 	 * Force syncs an offline player's inventory
 	 * contents with this inventory.
 	 */
-	public function syncOffline() : void;
+	public function syncOffline(): void;
 
 	/**
 	 * Syncs inventory action committed by
@@ -58,7 +58,7 @@ interface InvSeeInventory{
 	 *
 	 * @param SlotChangeAction $action
 	 */
-	public function syncPlayerAction(SlotChangeAction $action) : void;
+	public function syncPlayerAction(SlotChangeAction $action): void;
 
 	/**
 	 * Syncs inventory action committed by
@@ -68,7 +68,7 @@ interface InvSeeInventory{
 	 * @param Player $player
 	 * @param SlotChangeAction $action
 	 */
-	public function syncSpyerAction(Player $player, SlotChangeAction $action) : void;
+	public function syncSpyerAction(Player $player, SlotChangeAction $action): void;
 
 	/**
 	 * Returns the inventory contents of the
@@ -77,5 +77,5 @@ interface InvSeeInventory{
 	 *
 	 * @return Item[]
 	 */
-	public function getSpyerContents() : array;
+	public function getSpyerContents(): array;
 }

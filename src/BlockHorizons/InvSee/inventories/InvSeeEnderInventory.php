@@ -14,19 +14,19 @@ use pocketmine\Server;
 class InvSeeEnderInventory extends ChestInventory implements InvSeeInventory{
 	use InvSeeInventoryTrait;
 
-	public function canSpyInventory(Inventory $inventory) : bool{
+	public function canSpyInventory(Inventory $inventory): bool {
 		return $inventory instanceof EnderInventory;
 	}
 
-	public function canModifySlot(Player $player, int $slot) : bool{
+	public function canModifySlot(Player $player, int $slot): bool {
 		return $player->hasPermission($this->getSpying() === $player->getLowerCaseName() ? "invsee.enderinventory.modify.self" : "invsee.enderinventory.modify");
 	}
 
-	public function syncOnline(Player $player) : void{
+	public function syncOnline(Player $player): void {
 		$player->getEnderChestInventory()->setContents($this->getContents());
 	}
 
-	public function syncOffline() : void{
+	public function syncOffline(): void {
 		$server = Server::getInstance();
 
 		$contents = [];
@@ -39,15 +39,15 @@ class InvSeeEnderInventory extends ChestInventory implements InvSeeInventory{
 		$server->saveOfflinePlayerData($this->spying, $nbt);
 	}
 
-	public function syncPlayerAction(SlotChangeAction $action) : void{
+	public function syncPlayerAction(SlotChangeAction $action): void {
 		$this->setItem($action->getSlot(), $action->getTargetItem());
 	}
 
-	public function syncSpyerAction(Player $spying, SlotChangeAction $action) : void{
+	public function syncSpyerAction(Player $spying, SlotChangeAction $action): void {
 		$spying->getEnderChestInventory()->setItem($action->getSlot(), $action->getTargetItem());
 	}
 
-	public function getSpyerContents() : array{
+	public function getSpyerContents(): array {
 		$server = Server::getInstance();
 		$player_instance = $server->getPlayerExact($this->spying);
 
