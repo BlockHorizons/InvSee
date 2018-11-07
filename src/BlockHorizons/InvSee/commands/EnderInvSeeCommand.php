@@ -1,6 +1,8 @@
 <?php
 namespace BlockHorizons\InvSee\commands;
 
+use BlockHorizons\InvSee\InventoryHandler;
+
 use pocketmine\command\CommandSender;
 use pocketmine\utils\TextFormat;
 
@@ -15,7 +17,7 @@ class EnderInvSeeCommand extends BaseCommand {
 			return false;
 		}
 
-		if(!$this->getLoader()->getInventoryHandler()->viewEnderInventory($sender, $args[0])) {
+		if(!$this->getLoader()->getInventoryHandler()->send($sender, $args[0], InventoryHandler::TYPE_ENDER_INVENTORY)) {
 			$sender->sendMessage(TextFormat::RED . "You cannot view this inventory.");
 			return true;
 		}

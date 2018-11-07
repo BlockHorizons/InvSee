@@ -19,6 +19,10 @@ permissions:
           invsee.inventory.modify:
             default: op
             description: "Allows modifying a player's inventory."
+            children:
+              invsee.inventory.modify.self:
+                default: true
+                description: "Allows modifying your own inventory."
       invsee.enderinventory:
         default: false
         description: "Grants complete access to managing another player's ender inventory."
@@ -29,3 +33,7 @@ permissions:
           invsee.enderinventory.modify:
             default: op
             description: "Allows modifying a player's ender inventory."
+            children:
+              invsee.enderinventory.modify.self:
+                default: true
+                description: "Allows modifying your own ender inventory."

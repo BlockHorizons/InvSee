@@ -23,8 +23,8 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 		$commands = [];
 
 		foreach([
-			EnderInvSeeCommand::class => ["enderinvsee", "View a player's ender chest inventory.", "/enderinvsee <player>", "invsee.enderinventory.view"],
-			InvSeeCommand::class => ["invsee", "View a player's inventory.", "/invsee <player>", "invsee.inventory.view"]
+			EnderInvSeeCommand::class 	=> ["enderinvsee", "View a player's ender chest inventory.", "/enderinvsee <player>", "invsee.enderinventory.view"],
+			InvSeeCommand::class 		=> ["invsee", "View a player's inventory.", "/invsee <player>", "invsee.inventory.view"]
 		] as $class => [$name, $desc, $usage, $perm]) {
 			$commands[$name] = new $class($loader, $name, $desc, $usage);
 			$commands[$name]->setPermission($perm);
@@ -114,6 +114,10 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 			$sender->sendMessage(str_replace("/" . $this->getName(), "/" . $commandLabel, $this->getUsage()));
 			return;
 		}
+	}
+
+	public function sendPermissionMessage(CommandSender $sender) : void{
+		$sender->sendMessage(TextFormat::RED . "You don't have permission to use this command.");
 	}
 
 	/**
