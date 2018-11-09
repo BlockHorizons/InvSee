@@ -24,7 +24,6 @@ class EventListener implements Listener {
 	/**
 	 * @param PlayerJoinEvent $event
 	 * @priority MONITOR
-	 * @ignoreCancelled true
 	 */
 	public function onPlayerJoin(PlayerJoinEvent $event): void {
 		$this->handler->handleJoin($event->getPlayer());
