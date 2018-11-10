@@ -41,8 +41,8 @@ class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInvent
 		$server = Server::getInstance();
 
 		$contents = [];
-		foreach($this->getContents() as $slot => $item){
-			if(($armor_slot = array_search($slot, self::ARMOR_INVENTORY_MENU_SLOTS, true)) !== false){
+		foreach($this->getContents() as $slot => $item) {
+			if(($armor_slot = array_search($slot, self::ARMOR_INVENTORY_MENU_SLOTS, true)) !== false) {
 				$contents[] = $item->nbtSerialize($armor_slot + 100);
 			}else{
 				$contents[] = $item->nbtSerialize($slot + 9);
@@ -57,9 +57,9 @@ class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInvent
 	public function syncPlayerAction(SlotChangeAction $action): void {
 		$inventory = $action->getInventory();
 
-		if($inventory instanceof PlayerInventory){
+		if($inventory instanceof PlayerInventory) {
 			$this->setItem($action->getSlot(), $action->getTargetItem());
-		}elseif($inventory instanceof ArmorInventory){
+		}elseif($inventory instanceof ArmorInventory) {
 			$this->setItem(self::ARMOR_INVENTORY_MENU_SLOTS[$action->getSlot()], $action->getTargetItem());
 		}
 	}
@@ -67,7 +67,7 @@ class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInvent
 	public function syncSpyerAction(Player $spying, SlotChangeAction $action): void {
 		$slot = $action->getSlot();
 
-		if(($armor_slot = array_search($slot, self::ARMOR_INVENTORY_MENU_SLOTS, true)) !== false){
+		if(($armor_slot = array_search($slot, self::ARMOR_INVENTORY_MENU_SLOTS, true)) !== false) {
 			$spying->getArmorInventory()->setItem($armor_slot, $action->getTargetItem());
 		}else{
 			$spying->getInventory()->setItem($slot, $action->getTargetItem());
@@ -78,14 +78,14 @@ class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInvent
 		$server = Server::getInstance();
 		$player_instance = $server->getPlayerExact($this->spying);
 
-		if($player_instance !== null){
+		if($player_instance !== null) {
 			$contents = $player_instance->getInventory()->getContents();
-			foreach($player_instance->getArmorInventory()->getContents() as $slot => $armor){
+			foreach($player_instance->getArmorInventory()->getContents() as $slot => $armor) {
 				$contents[self::ARMOR_INVENTORY_MENU_SLOTS[$slot]] = $armor;
 			}
 		}else{
 			$contents = [];
-			foreach($server->getOfflinePlayerData($this->spying)->getListTag("Inventory") as $nbt){
+			foreach($server->getOfflinePlayerData($this->spying)->getListTag("Inventory") as $nbt) {
 				$slot = $nbt->getByte("Slot");
 				$contents[$slot >= 100 && $slot < 104 ? self::ARMOR_INVENTORY_MENU_SLOTS[$slot - 100] : $slot - 9] = Item::nbtDeserialize($nbt);
 			}

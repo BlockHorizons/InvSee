@@ -17,11 +17,11 @@ class SpyingPlayerData {
 	/** @var string|null */
 	protected $rawUUID;
 
-	public function __construct(string $spying){
+	public function __construct(string $spying) {
 		$this->spying = $spying;
 
 		$player = Server::getInstance()->getPlayerExact($spying);
-		if($player !== null){
+		if($player !== null) {
 			$this->rawUUID = $player->getRawUniqueId();
 		}
 	}
@@ -31,7 +31,7 @@ class SpyingPlayerData {
 	}
 
 	public function add(InvMenu $menu): void {
-		if(isset($this->menus[$class = get_class($menu->getInventory())])){
+		if(isset($this->menus[$class = get_class($menu->getInventory())])) {
 			throw new \RuntimeError("Tried adding an already existing inventory.");
 		}
 
@@ -53,7 +53,7 @@ class SpyingPlayerData {
 
 	public function onJoin(Player $player): void {
 		$this->rawUUID = $player->getRawUniqueId();
-		foreach($this->getAll() as $menu){
+		foreach($this->getAll() as $menu) {
 			$menu->getInventory()->syncOnline($player);
 		}
 	}

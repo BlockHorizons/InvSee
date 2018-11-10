@@ -30,7 +30,7 @@ class InvSeeEnderInventory extends ChestInventory implements InvSeeInventory {
 		$server = Server::getInstance();
 
 		$contents = [];
-		foreach($this->getContents() as $slot => $item){
+		foreach($this->getContents() as $slot => $item) {
 			$contents[] = $item->nbtSerialize($slot);
 		}
 
@@ -51,12 +51,12 @@ class InvSeeEnderInventory extends ChestInventory implements InvSeeInventory {
 		$server = Server::getInstance();
 		$player_instance = $server->getPlayerExact($this->spying);
 
-		if($player_instance !== null){
+		if($player_instance !== null) {
 			return $player_instance->getEnderChestInventory()->getContents();
 		}
 
 		$contents = [];
-		foreach($server->getOfflinePlayerData($this->spying)->getListTag("EnderChestInventory") as $nbt){
+		foreach($server->getOfflinePlayerData($this->spying)->getListTag("EnderChestInventory") as $nbt) {
 			$contents[$nbt->getByte("Slot")] = Item::nbtDeserialize($nbt);
 		}
 

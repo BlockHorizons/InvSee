@@ -44,7 +44,7 @@ class EventListener implements Listener {
 	 */
 	public function onEntityArmorChange(EntityArmorChangeEvent $event): void {
 		$player = $event->getEntity();
-		if($player instanceof Player){
+		if($player instanceof Player) {
 			$this->handler->syncPlayerAction($player, new SlotChangeAction($player->getArmorInventory(), $event->getSlot(), $event->getOldItem(), $event->getNewItem()));
 		}
 	}
@@ -56,7 +56,7 @@ class EventListener implements Listener {
 	 */
 	public function onEntityInventoryChange(EntityInventoryChangeEvent $event): void {
 		$player = $event->getEntity();
-		if($player instanceof Player){
+		if($player instanceof Player) {
 			$this->handler->syncPlayerAction($player, new SlotChangeAction($player->getInventory(), $event->getSlot(), $event->getOldItem(), $event->getNewItem()));
 		}
 	}
@@ -69,9 +69,9 @@ class EventListener implements Listener {
 	public function onInventoryTransaction(InventoryTransactionEvent $event): void {
 		$transaction = $event->getTransaction();
 		foreach($transaction->getActions() as $action) {
-			if($action instanceof SlotChangeAction){
+			if($action instanceof SlotChangeAction) {
 				$inventory = $action->getInventory();
-				if($inventory instanceof InvSeeInventory){
+				if($inventory instanceof InvSeeInventory) {
 					$this->handler->syncSpyerAction($action);
 				}else{
 					$this->handler->syncPlayerAction($transaction->getSource(), $action);

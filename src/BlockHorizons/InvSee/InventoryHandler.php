@@ -24,7 +24,7 @@ class InventoryHandler {
 	/** @var SpyingPlayerData[] */
 	private $spying = [];
 
-	public function __construct(Loader $loader){
+	public function __construct(Loader $loader) {
 		if(!InvMenuHandler::isRegistered()) {
 			InvMenuHandler::register($loader);
 		}
@@ -33,7 +33,7 @@ class InventoryHandler {
 	}
 
 	public function handleJoin(Player $player): void {
-		if(isset($this->spying[$key = $player->getLowerCaseName()])){
+		if(isset($this->spying[$key = $player->getLowerCaseName()])) {
 			$this->spying[$key]->onJoin($player);
 		}
 
@@ -41,16 +41,16 @@ class InventoryHandler {
 	}
 
 	public function handleQuit(Player $player): void {
-		if(isset($this->spying[$key = $player->getLowerCaseName()])){
+		if(isset($this->spying[$key = $player->getLowerCaseName()])) {
 			$this->spying[$key]->onQuit($player);
 		}
 	}
 
 	public function syncSpyerAction(SlotChangeAction $action): void {
 		$inventory = $action->getInventory();
-		if(isset($this->spying[$key = $inventory->getSpying()])){
+		if(isset($this->spying[$key = $inventory->getSpying()])) {
 			$player = $this->spying[$key]->getPlayer();
-			if($player !== null){
+			if($player !== null) {
 				$inventory->syncSpyerAction($player, $action);
 			}
 		}
@@ -58,10 +58,10 @@ class InventoryHandler {
 
 	public function syncPlayerAction(Player $player, SlotChangeAction $action): void {
 		$inventory = $action->getInventory();
-		if(isset($this->spying[$key = $player->getLowerCaseName()])){
-			foreach($this->spying[$key]->getAll() as $menu){
+		if(isset($this->spying[$key = $player->getLowerCaseName()])) {
+			foreach($this->spying[$key]->getAll() as $menu) {
 				$menu_inventory = $menu->getInventory();
-				if($menu_inventory->canSpyInventory($inventory)){
+				if($menu_inventory->canSpyInventory($inventory)) {
 					$menu_inventory->syncPlayerAction($action);
 				}
 			}
@@ -69,8 +69,8 @@ class InventoryHandler {
 	}
 
 	public function onInventoryClose(Player $player, InvSeeInventory $inventory): void {
-		if(count($inventory->getViewers()) <= 1){
-			if($this->spying[$key = $inventory->getSpying()]->getPlayer() === null){
+		if(count($inventory->getViewers()) <= 1) {
+			if($this->spying[$key = $inventory->getSpying()]->getPlayer() === null) {
 				$inventory->syncOffline();
 			}
 
@@ -82,7 +82,7 @@ class InventoryHandler {
 		$data = $this->spying[$key = strtolower($player)] ?? ($this->spying[$key] = new SpyingPlayerData($player));
 
 		$menu = $data->get($inventory_class);
-		if($menu === null){
+		if($menu === null) {
 			$menu = $data->create($inventory_class);
 			$menu->setName($player . "'s Inventory");
 			$menu->setInventoryCloseListener([$this, "onInventoryClose"]);

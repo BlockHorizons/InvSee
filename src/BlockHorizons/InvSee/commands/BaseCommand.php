@@ -7,6 +7,7 @@ use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\command\PluginIdentifiableCommand;
+use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\plugin\Plugin;
 use pocketmine\utils\TextFormat;
 
@@ -23,8 +24,8 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 		$commands = [];
 
 		foreach([
-			EnderInvSeeCommand::class 	=> ["enderinvsee", "View a player's ender chest inventory.", "/enderinvsee <player>", "invsee.enderinventory.view"],
-			InvSeeCommand::class 		=> ["invsee", "View a player's inventory.", "/invsee <player>", "invsee.inventory.view"]
+			EnderInvSeeCommand::class => ["enderinvsee", "View a player's ender chest inventory.", "/enderinvsee <player>", "invsee.enderinventory.view"],
+			InvSeeCommand::class => ["invsee", "View a player's inventory.", "/invsee <player>", "invsee.inventory.view"]
 		] as $class => [$name, $desc, $usage, $perm]) {
 			$commands[$name] = new $class($loader, $name, $desc, $usage);
 			$commands[$name]->setPermission($perm);
@@ -40,10 +41,6 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 	protected $flags = 0;
 
 	public function __construct(Loader $loader, string $name, string $description = "", string $usageMessage = "", array $aliases = []) {
-		if($usageMessage !== "") {
-			$usageMessage = TextFormat::RED . "Usage: " . $usageMessage;
-		}
-
 		parent::__construct($name, $description, $usageMessage, $aliases);
 		$this->loader = $loader;
 
@@ -97,23 +94,32 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 	 * @param string        $commandLabel
 	 * @param string[]      $args
 	 *
-	 * @return mixed
+	 * @return bool
 	 */
-	final public function execute(CommandSender $sender, string $commandLabel, array $args): void {
+	final public function execute(CommandSender $sender, string $commandLabel, array $args): bool {
+		if(!$this->loader->isEnabled()) {
+			return false;
+		}
+
 		if($sender instanceof ConsoleCommandSender && $this->isFlagSet(self::FLAG_DENY_CONSOLE)) {
 			$sender->sendMessage(TextFormat::RED . "You cannot use this command thru console.");
-			return;
+			return false;
 		}
 
 		if(!$this->testPermissionSilent($sender)) {
 			$this->sendPermissionMessage($sender);
-			return;
+			return false;
 		}
 
 		if(!$this->onCommand($sender, $commandLabel, $args) && $this->usageMessage !== "") {
-			$sender->sendMessage(str_replace("/" . $this->getName(), "/" . $commandLabel, $this->getUsage()));
-			return;
+			if($this->usageMessage !== "") {
+				throw new InvalidCommandSyntaxException();
+			}
+
+			return false;
 		}
+
+		return true;
 	}
 
 	public function sendPermissionMessage(CommandSender $sender): void {

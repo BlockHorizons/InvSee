@@ -13,7 +13,7 @@ class InvSeeEnderInventoryProcessor implements InventoryEventProcessor {
 	/** @var Player */
 	private $player;
 
-	public function __construct(Player $player){
+	public function __construct(Player $player) {
 		$this->player = $player;
 	}
 
