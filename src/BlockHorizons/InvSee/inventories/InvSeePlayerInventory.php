@@ -41,11 +41,17 @@ class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInvent
 		$server = Server::getInstance();
 
 		$contents = [];
-		foreach($this->getContents() as $slot => $item) {
-			if(($armor_slot = array_search($slot, self::ARMOR_INVENTORY_MENU_SLOTS, true)) !== false) {
-				$contents[] = $item->nbtSerialize($armor_slot + 100);
-			}else{
+		for($slot = 0; $slot < 36; ++$slot) {
+			$item = $this->getItem($slot);
+			if(!$item->isNull()) {
 				$contents[] = $item->nbtSerialize($slot + 9);
+			}
+		}
+
+		for($slot = 100; $slot < 104; ++$slot) {
+			$item = $this->getItem(self::ARMOR_INVENTORY_MENU_SLOTS[$slot - 100]);
+			if(!$item->isNull()) {
+				$contents[] = $item->nbtSerialize($slot);
 			}
 		}
 
@@ -87,7 +93,12 @@ class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInvent
 			$contents = [];
 			foreach($server->getOfflinePlayerData($this->spying)->getListTag("Inventory") as $nbt) {
 				$slot = $nbt->getByte("Slot");
-				$contents[$slot >= 100 && $slot < 104 ? self::ARMOR_INVENTORY_MENU_SLOTS[$slot - 100] : $slot - 9] = Item::nbtDeserialize($nbt);
+				if($slot >= 0 && $slot < 9) { //old hotbar stuff
+				}elseif ($slot >= 100 && $slot < 104) { //armor
+					$contents[self::ARMOR_INVENTORY_MENU_SLOTS[$slot - 100]] = Item::nbtDeserialize($nbt);
+				}else{
+					$contents[$slot - 9] = Item::nbtDeserialize($nbt);
+				}
 			}
 		}
 
