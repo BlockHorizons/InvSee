@@ -1,6 +1,8 @@
 <?php
 namespace BlockHorizons\InvSee\inventories;
 
+use BlockHorizons\InvSee\utils\SpyingPlayerData;
+
 use muqsit\invmenu\inventories\ChestInventory;
 
 use pocketmine\inventory\Inventory;
@@ -8,6 +10,22 @@ use pocketmine\inventory\transaction\action\SlotChangeAction;
 use pocketmine\Player;
 
 interface InvSeeInventory {
+
+	/**
+	 * Called when this inventory is
+	 * created using SpyingPlayerData::add().
+	 *
+	 * @param SpyingPlayerData $data
+	 */
+	public function initialize(SpyingPlayerData $data): void;
+
+	/**
+	 * Called when this inventory is
+	 * destroyed using SpyingPlayerData::remove().
+	 *
+	 * @param SpyingPlayerData $data
+	 */
+	public function deInitialize(SpyingPlayerData $data): void;
 
 	/**
 	 * Returns the username of the player

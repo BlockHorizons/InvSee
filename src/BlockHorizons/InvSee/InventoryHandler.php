@@ -2,7 +2,6 @@
 namespace BlockHorizons\InvSee;
 
 use BlockHorizons\InvSee\inventories\InvSeeEnderInventory;
-use BlockHorizons\InvSee\inventories\InvSeeEnderInventoryProcessor;
 use BlockHorizons\InvSee\inventories\InvSeeInventory;
 use BlockHorizons\InvSee\inventories\InvSeePlayerInventory;
 use BlockHorizons\InvSee\utils\SpyingPlayerData;
@@ -36,8 +35,6 @@ class InventoryHandler {
 		if(isset($this->spying[$key = $player->getLowerCaseName()])) {
 			$this->spying[$key]->onJoin($player);
 		}
-
-		$player->getEnderChestInventory()->setEventProcessor(new InvSeeEnderInventoryProcessor($player));
 	}
 
 	public function handleQuit(Player $player): void {
@@ -74,7 +71,10 @@ class InventoryHandler {
 				$inventory->syncOffline();
 			}
 
-			unset($this->spying[$key]);
+			$this->spying[$key]->remove($inventory);
+			if($this->spying[$key]->isEmpty()) {
+				unset($this->spying[$key]);
+			}
 		}
 	}
 

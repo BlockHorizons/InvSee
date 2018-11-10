@@ -18,4 +18,10 @@ trait InvSeeInventoryTrait {
 	public function getSpying(): string {
 		return $this->spying;
 	}
+
+	public function initialize(SpyingPlayerData $data): void {
+	}
+
+	public function deInitialize(SpyingPlayerData $data): void {
+	}
 }

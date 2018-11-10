@@ -1,6 +1,8 @@
 <?php
 namespace BlockHorizons\InvSee\inventories;
 
+use BlockHorizons\InvSee\utils\SpyingPlayerData;
+
 use muqsit\invmenu\inventories\ChestInventory;
 
 use pocketmine\inventory\EnderInventory;
@@ -22,8 +24,39 @@ class InvSeeEnderInventory extends ChestInventory implements InvSeeInventory {
 		return $player->hasPermission($this->getSpying() === $player->getLowerCaseName() ? "invsee.enderinventory.modify.self" : "invsee.enderinventory.modify");
 	}
 
+	protected function installInventoryProcessor(Player $player): void {
+		$inventory = $player->getEnderChestInventory();
+		if($inventory->getEventProcessor() !== null) {
+			throw new \BadMethodCallException("Can't override an already existing event processor (" . get_class($inventory->getEventProcessor()) . ")");
+		}
+
+		$inventory->setEventProcessor(new InvSeeEnderInventoryProcessor($player));
+	}
+
+	protected function uninstallInventoryProcessor(Player $player): void {
+		$inventory = $player->getEnderChestInventory();
+		if($inventory->getEventProcessor() instanceof InvSeeEnderInventoryProcessor) {
+			$inventory->setEventProcessor(null);
+		}
+	}
+
+	public function initialize(SpyingPlayerData $data): void {
+		$player = $data->getPlayer();
+		if($player !== null) {
+			$this->installInventoryProcessor($player);
+		}
+	}
+
+	public function deInitialize(SpyingPlayerData $data): void {
+		$player = $data->getPlayer();
+		if($player !== null) {
+			$this->uninstallInventoryProcessor($player);
+		}
+	}
+
 	public function syncOnline(Player $player): void {
 		$player->getEnderChestInventory()->setContents($this->getContents());
+		$this->installInventoryProcessor($player);
 	}
 
 	public function syncOffline(): void {

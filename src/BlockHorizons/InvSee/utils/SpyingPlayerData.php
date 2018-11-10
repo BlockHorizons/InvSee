@@ -1,6 +1,8 @@
 <?php
 namespace BlockHorizons\InvSee\utils;
 
+use BlockHorizons\InvSee\inventories\InvSeeInventory;
+
 use muqsit\invmenu\InvMenu;
 
 use pocketmine\Player;
@@ -31,15 +33,25 @@ class SpyingPlayerData {
 	}
 
 	public function add(InvMenu $menu): void {
-		if(isset($this->menus[$class = get_class($menu->getInventory())])) {
+		if(isset($this->menus[$class = get_class($inventory = $menu->getInventory())])) {
 			throw new \RuntimeError("Tried adding an already existing inventory.");
 		}
 
 		$this->menus[$class] = $menu;
+		$inventory->initialize($this);
 	}
 
 	public function get(string $inventory_class): ?InvMenu {
 		return $this->menus[$inventory_class] ?? null;
+	}
+
+	public function remove(InvSeeInventory $inventory): void {
+		unset($this->menus[get_class($inventory)]);
+		$inventory->deInitialize($this);
+	}
+
+	public function isEmpty(): bool {
+		return empty($this->menus);
 	}
 
 	public function create(string $inventory_class): InvMenu {
