@@ -38,18 +38,6 @@ class EventListener implements Listener {
 	}
 
 	/**
-	 * @param EntityArmorChangeEvent $event
-	 * @priority MONITOR
-	 * @ignoreCancelled true
-	 */
-	public function onEntityArmorChange(EntityArmorChangeEvent $event): void {
-		$player = $event->getEntity();
-		if($player instanceof Player) {
-			$this->handler->syncPlayerAction($player, new SlotChangeAction($player->getArmorInventory(), $event->getSlot(), $event->getOldItem(), $event->getNewItem()));
-		}
-	}
-
-	/**
 	 * @param EntityInventoryChangeEvent $event
 	 * @priority MONITOR
 	 * @ignoreCancelled true
@@ -57,7 +45,7 @@ class EventListener implements Listener {
 	public function onEntityInventoryChange(EntityInventoryChangeEvent $event): void {
 		$player = $event->getEntity();
 		if($player instanceof Player) {
-			$this->handler->syncPlayerAction($player, new SlotChangeAction($player->getInventory(), $event->getSlot(), $event->getOldItem(), $event->getNewItem()));
+			$this->handler->syncPlayerAction($player, new SlotChangeAction($event instanceof EntityArmorChangeEvent ? $player->getArmorInventory() : $player->getInventory(), $event->getSlot(), $event->getOldItem(), $event->getNewItem()));
 		}
 	}
 
