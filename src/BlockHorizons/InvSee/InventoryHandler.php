@@ -45,7 +45,7 @@ class InventoryHandler {
 
 	public function syncSpyerAction(SlotChangeAction $action): void {
 		$inventory = $action->getInventory();
-		if(isset($this->spying[$key = $inventory->getSpying()])) {
+		if(isset($this->spying[$key = strtolower($inventory->getSpying())])) {
 			$player = $this->spying[$key]->getPlayer();
 			if($player !== null) {
 				$inventory->syncSpyerAction($player, $action);
@@ -67,7 +67,7 @@ class InventoryHandler {
 
 	public function onInventoryClose(Player $player, InvSeeInventory $inventory): void {
 		if(count($inventory->getViewers()) <= 1) {
-			if($this->spying[$key = $inventory->getSpying()]->getPlayer() === null) {
+			if($this->spying[$key = strtolower($inventory->getSpying())]->getPlayer() === null) {
 				$inventory->syncOffline();
 			}
 
