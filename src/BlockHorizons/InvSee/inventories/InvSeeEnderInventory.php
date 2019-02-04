@@ -24,39 +24,40 @@ class InvSeeEnderInventory extends ChestInventory implements InvSeeInventory {
 		return $player->hasPermission($this->getSpying() === $player->getLowerCaseName() ? "invsee.enderinventory.modify.self" : "invsee.enderinventory.modify");
 	}
 
-	protected function installInventoryProcessor(Player $player): void {
+	protected function installSlotChangeListener(Player $player): void {
 		$inventory = $player->getEnderChestInventory();
-		if($inventory->getEventProcessor() !== null) {
-			throw new \BadMethodCallException("Can't override an already existing event processor (" . get_class($inventory->getEventProcessor()) . ")");
+		if($inventory->getSlotChangeListener() !== null) {
+			throw new \BadMethodCallException("Tried overriding an already existing slot change listener.");
 		}
 
-		$inventory->setEventProcessor(new InvSeeEnderInventoryProcessor($player));
+		$inventory_handler = Server::getInstance()->getPluginManager()->getPlugin("InvSee")->getInventoryHandler();
+		$inventory->setSlotChangeListener(function(Inventory $inventory, int $slot, Item $oldItem, Item $newItem) use($player, $inventory_handler): ?Item {
+			$inventory_handler->syncPlayerAction($player, new SlotChangeAction($inventory, $slot, $oldItem, $newItem));
+			return $newItem;
+		});
 	}
 
-	protected function uninstallInventoryProcessor(Player $player): void {
-		$inventory = $player->getEnderChestInventory();
-		if($inventory->getEventProcessor() instanceof InvSeeEnderInventoryProcessor) {
-			$inventory->setEventProcessor(null);
-		}
+	protected function uninstallSlotChangeListener(Player $player): void {
+		$player->getEnderChestInventory()->setSlotChangeListener(null);
 	}
 
 	public function initialize(SpyingPlayerData $data): void {
 		$player = $data->getPlayer();
 		if($player !== null) {
-			$this->installInventoryProcessor($player);
+			$this->installSlotChangeListener($player);
 		}
 	}
 
 	public function deInitialize(SpyingPlayerData $data): void {
 		$player = $data->getPlayer();
 		if($player !== null) {
-			$this->uninstallInventoryProcessor($player);
+			$this->uninstallSlotChangeListener($player);
 		}
 	}
 
 	public function syncOnline(Player $player): void {
 		$player->getEnderChestInventory()->setContents($this->getContents());
-		$this->installInventoryProcessor($player);
+		$this->installSlotChangeListener($player);
 	}
 
 	public function syncOffline(): void {
