@@ -8,6 +8,7 @@ use pocketmine\inventory\Inventory;
 use pocketmine\inventory\PlayerInventory;
 use pocketmine\inventory\transaction\action\SlotChangeAction;
 use pocketmine\item\Item;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\Player;
 use pocketmine\Server;
@@ -55,7 +56,7 @@ class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInvent
 			}
 		}
 
-		$nbt = $server->getOfflinePlayerData($this->spying);
+		$nbt = $server->getOfflinePlayerData($this->spying) ?? new CompoundTag();
 		$nbt->setTag(new ListTag("Inventory", $contents));
 		$server->saveOfflinePlayerData($this->spying, $nbt);
 	}
@@ -91,13 +92,16 @@ class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInvent
 			}
 		}else{
 			$contents = [];
-			foreach($server->getOfflinePlayerData($this->spying)->getListTag("Inventory") as $nbt) {
-				$slot = $nbt->getByte("Slot");
-				if($slot >= 0 && $slot < 9) { //old hotbar stuff
-				}elseif ($slot >= 100 && $slot < 104) { //armor
-					$contents[self::ARMOR_INVENTORY_MENU_SLOTS[$slot - 100]] = Item::nbtDeserialize($nbt);
-				}else{
-					$contents[$slot - 9] = Item::nbtDeserialize($nbt);
+			$data = $server->getOfflinePlayerData($this->spying);
+			if($data !== null) {
+				foreach($data->getListTag("Inventory") as $nbt) {
+					$slot = $nbt->getByte("Slot");
+					if($slot >= 0 && $slot < 9) { //old hotbar stuff
+					}elseif ($slot >= 100 && $slot < 104) { //armor
+						$contents[self::ARMOR_INVENTORY_MENU_SLOTS[$slot - 100]] = Item::nbtDeserialize($nbt);
+					}else{
+						$contents[$slot - 9] = Item::nbtDeserialize($nbt);
+					}
 				}
 			}
 		}

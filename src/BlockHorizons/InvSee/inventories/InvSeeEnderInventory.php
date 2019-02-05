@@ -9,6 +9,7 @@ use pocketmine\inventory\EnderInventory;
 use pocketmine\inventory\Inventory;
 use pocketmine\inventory\transaction\action\SlotChangeAction;
 use pocketmine\item\Item;
+use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\Player;
 use pocketmine\Server;
@@ -68,7 +69,7 @@ class InvSeeEnderInventory extends ChestInventory implements InvSeeInventory {
 			$contents[] = $item->nbtSerialize($slot);
 		}
 
-		$nbt = $server->getOfflinePlayerData($this->spying);
+		$nbt = $server->getOfflinePlayerData($this->spying) ?? new CompoundTag();
 		$nbt->setTag(new ListTag("EnderChestInventory", $contents));
 		$server->saveOfflinePlayerData($this->spying, $nbt);
 	}
@@ -90,8 +91,11 @@ class InvSeeEnderInventory extends ChestInventory implements InvSeeInventory {
 		}
 
 		$contents = [];
-		foreach($server->getOfflinePlayerData($this->spying)->getListTag("EnderChestInventory") as $nbt) {
-			$contents[$nbt->getByte("Slot")] = Item::nbtDeserialize($nbt);
+		$data = $server->getOfflinePlayerData($this->spying);
+		if($data !== null) {
+			foreach($data->getListTag("EnderChestInventory") as $nbt) {
+				$contents[$nbt->getByte("Slot")] = Item::nbtDeserialize($nbt);
+			}
 		}
 
 		return $contents;
