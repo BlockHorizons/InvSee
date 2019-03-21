@@ -56,7 +56,7 @@ class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInvent
 			}
 		}
 
-		$nbt = $server->getOfflinePlayerData($this->spying) ?? new CompoundTag();
+		$nbt = $server->getOfflinePlayerData($this->spying) ?? new CompoundTag("", []);
 		$nbt->setTag(new ListTag("Inventory", $contents));
 		$server->saveOfflinePlayerData($this->spying, $nbt);
 	}

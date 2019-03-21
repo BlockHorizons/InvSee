@@ -45,7 +45,10 @@ class EventListener implements Listener {
 	public function onEntityInventoryChange(EntityInventoryChangeEvent $event): void {
 		$player = $event->getEntity();
 		if($player instanceof Player) {
-			$this->handler->syncPlayerAction($player, new SlotChangeAction($event instanceof EntityArmorChangeEvent ? $player->getArmorInventory() : $player->getInventory(), $event->getSlot(), $event->getOldItem(), $event->getNewItem()));
+			$inventory = $event instanceof EntityArmorChangeEvent ? $player->getArmorInventory() : $player->getInventory();
+			if($inventory !== null) {
+				$this->handler->syncPlayerAction($player, new SlotChangeAction($inventory, $event->getSlot(), $event->getOldItem(), $event->getNewItem()));
+			}
 		}
 	}
 
