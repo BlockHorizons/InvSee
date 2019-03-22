@@ -69,8 +69,8 @@ class InvSeeEnderInventory extends ChestInventory implements InvSeeInventory {
 			$contents[] = $item->nbtSerialize($slot);
 		}
 
-		$nbt = $server->getOfflinePlayerData($this->spying) ?? new CompoundTag("", []);
-		$nbt->setTag(new ListTag("EnderChestInventory", $contents));
+		$nbt = $server->getOfflinePlayerData($this->spying) ?? CompoundTag::create();
+		$nbt->setTag("EnderChestInventory", new ListTag($contents));
 		$server->saveOfflinePlayerData($this->spying, $nbt);
 	}
 
