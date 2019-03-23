@@ -10,9 +10,9 @@ trait InvSeeInventoryTrait {
 	/** @var string */
 	protected $spying;
 
-	public function __construct(InvMenu $menu, SpyingPlayerData $spying_player_data, int $size = null, string $title = null) {
+	public function __construct(InvMenu $menu, SpyingPlayerData $spying_player_data) {
 		$this->spying = $spying_player_data->getSpying();
-		parent::__construct($menu, $this->getSpyerContents(), $size, $title);
+		parent::__construct($menu, $this->getSpyerContents());
 	}
 
 	public function getSpying(): string {
