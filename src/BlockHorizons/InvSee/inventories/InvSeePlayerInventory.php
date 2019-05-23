@@ -1,6 +1,8 @@
 <?php
 namespace BlockHorizons\InvSee\inventories;
 
+use BlockHorizons\InvSee\inventories\listeners\SyncInventoryChangeListener;
+use BlockHorizons\InvSee\utils\SpyingPlayerData;
 use muqsit\invmenu\inventories\DoubleChestInventory;
 
 use pocketmine\inventory\ArmorInventory;
@@ -24,6 +26,12 @@ class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInvent
 		3 => 51
 	];
 
+	/** @var SyncInventoryChangeLisetner|null */
+	private $inventory_listener;
+
+	/** @var SyncInventoryChangeLisetner|null */
+	private $armor_inventory_listener;
+
 	public function canSpyInventory(Inventory $inventory): bool {
 		return $inventory instanceof PlayerInventory || $inventory instanceof ArmorInventory;
 	}
@@ -32,10 +40,47 @@ class InvSeePlayerInventory extends DoubleChestInventory implements InvSeeInvent
 		return $player->hasPermission($this->getSpying() === $player->getLowerCaseName() ? "invsee.inventory.modify.self" : "invsee.inventory.modify") && ($slot < 36 || in_array($slot, self::ARMOR_INVENTORY_MENU_SLOTS));
 	}
 
+	protected function installChangeListener(Player $player): void {
+		$inventory = $player->getInventory();
+		$inventory->addChangeListeners($this->inventory_listener = new SyncInventoryChangeListener($player, $inventory));
+
+		$inventory = $player->getArmorInventory();
+		$inventory->addChangeListeners($this->armor_inventory_listener = new SyncInventoryChangeListener($player, $inventory));
+	}
+
+	protected function uninstallChangeListener(Player $player): void {
+		$player->getInventory()->removeChangeListeners($this->inventory_listener);
+		$player->getArmorInventory()->removeChangeListeners($this->armor_inventory_listener);
+	}
+
+	public function initialize(SpyingPlayerData $data): void {
+		$player = $data->getPlayer();
+		if($player !== null) {
+			$this->installChangeListener($player);
+		}
+	}
+
+	public function deInitialize(SpyingPlayerData $data): void {
+		$player = $data->getPlayer();
+		if($player !== null) {
+			$this->uninstallChangeListener($player);
+		}
+	}
+
 	public function syncOnline(Player $player): void {
+        $armor_slots = array_flip(self::ARMOR_INVENTORY_MENU_SLOTS);
 		$contents = $this->getContents();
-		$player->getInventory()->setContents(array_slice($contents, 0, $player->getInventory()->getSize()));
-		$player->getArmorInventory()->setContents(array_intersect_key($contents, array_flip(self::ARMOR_INVENTORY_MENU_SLOTS)));
+		$player->getInventory()->setContents(array_slice(array_diff_key($contents, $armor_slots), 0, $player->getInventory()->getSize(), true));
+
+        $armor = [];
+        foreach(self::ARMOR_INVENTORY_MENU_SLOTS as $armor_slot => $contents_slot) {
+            if (isset($contents[$contents_slot])) {
+                $armor[$armor_slot] = $contents[$contents_slot];
+            }
+        }
+
+		$player->getArmorInventory()->setContents($armor);
+		$this->installChangeListener($player);
 	}
 
 	public function syncOffline(): void {

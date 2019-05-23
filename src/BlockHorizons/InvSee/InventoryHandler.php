@@ -4,6 +4,7 @@ namespace BlockHorizons\InvSee;
 use BlockHorizons\InvSee\inventories\InvSeeEnderInventory;
 use BlockHorizons\InvSee\inventories\InvSeeInventory;
 use BlockHorizons\InvSee\inventories\InvSeePlayerInventory;
+use BlockHorizons\InvSee\inventories\listeners\SyncInventoryChangeListener;
 use BlockHorizons\InvSee\utils\SpyingPlayerData;
 
 use muqsit\invmenu\InvMenuHandler;
@@ -29,6 +30,7 @@ class InventoryHandler {
 		}
 
 		$this->loader = $loader;
+		SyncInventoryChangeListener::init($this);
 	}
 
 	public function handleJoin(Player $player): void {

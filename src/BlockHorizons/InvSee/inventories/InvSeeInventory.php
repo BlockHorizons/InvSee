@@ -61,6 +61,8 @@ interface InvSeeInventory {
 	/**
 	 * Force syncs player's inventory contents
 	 * with this inventory.
+	 *
+	 * @param Player $player
 	 */
 	public function syncOnline(Player $player): void;
 

@@ -1,6 +1,7 @@
 <?php
 namespace BlockHorizons\InvSee\inventories;
 
+use BlockHorizons\InvSee\inventories\listeners\SyncInventoryChangeListener;
 use BlockHorizons\InvSee\utils\SpyingPlayerData;
 
 use muqsit\invmenu\inventories\ChestInventory;
@@ -17,6 +18,9 @@ use pocketmine\Server;
 class InvSeeEnderInventory extends ChestInventory implements InvSeeInventory {
 	use InvSeeInventoryTrait;
 
+	/** @var SyncInventoryChangeLisetner|null */
+	private $inventory_listener;
+
 	public function canSpyInventory(Inventory $inventory): bool {
 		return $inventory instanceof EnderInventory;
 	}
@@ -25,40 +29,32 @@ class InvSeeEnderInventory extends ChestInventory implements InvSeeInventory {
 		return $player->hasPermission($this->getSpying() === $player->getLowerCaseName() ? "invsee.enderinventory.modify.self" : "invsee.enderinventory.modify");
 	}
 
-	protected function installSlotChangeListener(Player $player): void {
+	protected function installChangeListener(Player $player): void {
 		$inventory = $player->getEnderChestInventory();
-		if($inventory->getSlotChangeListener() !== null) {
-			throw new \BadMethodCallException("Tried overriding an already existing slot change listener.");
-		}
-
-		$inventory_handler = Server::getInstance()->getPluginManager()->getPlugin("InvSee")->getInventoryHandler();
-		$inventory->setSlotChangeListener(function(Inventory $inventory, int $slot, Item $oldItem, Item $newItem) use($player, $inventory_handler): ?Item {
-			$inventory_handler->syncPlayerAction($player, new SlotChangeAction($inventory, $slot, $oldItem, $newItem));
-			return $newItem;
-		});
+		$inventory->addChangeListeners($this->inventory_listener = new SyncInventoryChangeListener($player, $inventory));
 	}
 
-	protected function uninstallSlotChangeListener(Player $player): void {
-		$player->getEnderChestInventory()->setSlotChangeListener(null);
+	protected function uninstallChangeListener(Player $player): void {
+		$player->getEnderChestInventory()->removeChangeListeners($this->inventory_listener);
 	}
 
 	public function initialize(SpyingPlayerData $data): void {
 		$player = $data->getPlayer();
 		if($player !== null) {
-			$this->installSlotChangeListener($player);
+			$this->installChangeListener($player);
 		}
 	}
 
 	public function deInitialize(SpyingPlayerData $data): void {
 		$player = $data->getPlayer();
 		if($player !== null) {
-			$this->uninstallSlotChangeListener($player);
+			$this->uninstallChangeListener($player);
 		}
 	}
 
 	public function syncOnline(Player $player): void {
 		$player->getEnderChestInventory()->setContents($this->getContents());
-		$this->installSlotChangeListener($player);
+		$this->installChangeListener($player);
 	}
 
 	public function syncOffline(): void {

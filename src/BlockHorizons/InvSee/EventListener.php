@@ -3,14 +3,11 @@ namespace BlockHorizons\InvSee;
 
 use BlockHorizons\InvSee\inventories\InvSeeInventory;
 
-use pocketmine\event\entity\EntityArmorChangeEvent;
-use pocketmine\event\entity\EntityInventoryChangeEvent;
 use pocketmine\event\inventory\InventoryTransactionEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\inventory\transaction\action\SlotChangeAction;
-use pocketmine\Player;
 
 class EventListener implements Listener {
 
@@ -35,21 +32,6 @@ class EventListener implements Listener {
 	 */
 	public function onPlayerQuit(PlayerQuitEvent $event): void {
 		$this->handler->handleQuit($event->getPlayer());
-	}
-
-	/**
-	 * @param EntityInventoryChangeEvent $event
-	 * @priority MONITOR
-	 * @ignoreCancelled true
-	 */
-	public function onEntityInventoryChange(EntityInventoryChangeEvent $event): void {
-		$player = $event->getEntity();
-		if($player instanceof Player) {
-			$inventory = $event instanceof EntityArmorChangeEvent ? $player->getArmorInventory() : $player->getInventory();
-			if($inventory !== null) {
-				$this->handler->syncPlayerAction($player, new SlotChangeAction($inventory, $event->getSlot(), $event->getOldItem(), $event->getNewItem()));
-			}
-		}
 	}
 
 	/**
