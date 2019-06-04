@@ -37,7 +37,6 @@ class EventListener implements Listener {
 	/**
 	 * @param InventoryTransactionEvent $event
 	 * @priority MONITOR
-	 * @ignoreCancelled true
 	 */
 	public function onInventoryTransaction(InventoryTransactionEvent $event): void {
 		$transaction = $event->getTransaction();
