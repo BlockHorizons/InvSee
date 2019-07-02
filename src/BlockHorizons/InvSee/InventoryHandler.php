@@ -6,16 +6,23 @@ namespace BlockHorizons\InvSee;
 
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\player\Player;
+use pocketmine\scheduler\ClosureTask;
+use pocketmine\scheduler\TaskScheduler;
 
 class InventoryHandler{
 
 	/** @var InvSeePlayer[] */
 	protected $players = [];
 
+	/** @var TaskScheduler */
+	protected $scheduler;
+
 	public function __construct(Loader $loader){
 		if(!InvMenuHandler::isRegistered()){
 			InvMenuHandler::register($loader);
 		}
+
+		$this->scheduler = $loader->getScheduler();
 	}
 
 	public function get(string $player) : InvSeePlayer{
@@ -34,19 +41,17 @@ class InventoryHandler{
 		}
 	}
 
-	public function tryGarbageCollecting(string $player) : bool{
-		if(isset($this->players[$name = strtolower($player)])){
-			$player = $this->players[$name];
-			if(
-				empty($player->getEnderChestInventoryMenu()->getInventory()->getViewers()) &&
-				empty($player->getInventoryMenu()->getInventory()->getViewers())
-			){
-				unset($this->players[$name]);
-				var_dump("GARBAGE COLLECTED {$player}");
-				return true;
+	public function tryGarbageCollecting(string $player, int $delay = 1) : void{
+		$this->scheduler->scheduleDelayedTask(new ClosureTask(function(int $currentTick) use($player) : void{
+			if(isset($this->players[$name = strtolower($player)])){
+				$player = $this->players[$name];
+				if(
+					empty($player->getEnderChestInventoryMenu()->getInventory()->getViewers()) &&
+					empty($player->getInventoryMenu()->getInventory()->getViewers())
+				){
+					unset($this->players[$name]);
+				}
 			}
-		}
-
-		return false;
+		}), $delay);
 	}
 }
