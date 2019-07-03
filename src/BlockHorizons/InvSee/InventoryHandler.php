@@ -49,6 +49,7 @@ class InventoryHandler{
 					empty($player->getEnderChestInventoryMenu()->getInventory()->getViewers()) &&
 					empty($player->getInventoryMenu()->getInventory()->getViewers())
 				){
+					$this->players[$name]->destroy();
 					unset($this->players[$name]);
 				}
 			}

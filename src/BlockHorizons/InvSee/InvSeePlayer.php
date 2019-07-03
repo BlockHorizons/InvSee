@@ -36,16 +36,6 @@ class InvSeePlayer{
 		$this->init($handler);
 	}
 
-	public function __destruct(){
-		$this->destroy();
-
-		$server = Server::getInstance();
-		$player = $server->getPlayerExact($this->player);
-		if($player !== null){
-			$this->destroyPlayer($player);
-		}
-	}
-
 	public function onJoin(Player $player) : void{
 		$this->initPlayer($player);
 	}
@@ -63,7 +53,6 @@ class InvSeePlayer{
 		$player->getInventory()->addChangeListeners(new PlayerInventoryChangeListener($this->inventory_menu->getInventory()));
 		$player->getArmorInventory()->addChangeListeners(new PlayerArmorInventoryChangeListener($this->inventory_menu->getInventory()));
 		$player->getEnderChestInventory()->addChangeListeners(new PlayerEnderInventoryChangeListener($this->ender_inventory_menu->getInventory()));
-
 
 		$this->inventory_menu->getInventory()->addChangeListeners(
 			new PlayerInventoryChangeListener($player->getInventory()),
@@ -151,9 +140,10 @@ class InvSeePlayer{
 		}
 	}
 
-	private function destroy() : void{
+	public function destroy() : void{
 		$server = Server::getInstance();
-		if($server->getPlayerExact($this->player) === null){
+		$player = $server->getPlayerExact($this->player);
+		if($player === null){
 			InvCombiner::split($this->inventory_menu->getInventory()->getContents(), $inventory, $armor_inventory);
 
 			$serialized_inventory = [];
@@ -178,6 +168,8 @@ class InvSeePlayer{
 			$nbt->setTag("Inventory", new ListTag($serialized_inventory));
 			$nbt->setTag("EnderChestInventory", new ListTag($serialized_ender_inventory));
 			$server->saveOfflinePlayerData($this->player, $nbt);
+		}else{
+			$this->destroyPlayer($player);
 		}
 	}
 
