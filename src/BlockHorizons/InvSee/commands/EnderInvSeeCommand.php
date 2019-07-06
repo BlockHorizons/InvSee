@@ -21,7 +21,7 @@ class EnderInvSeeCommand extends BaseCommand{
 
 		if(
 			!$sender->hasPermission("invsee.enderinventory.view") &&
-			(strtolower($args[0]) !== $sender->getLowerCaseName() || !$sender->hasPermission("invsee.enderinventory.view.self"))
+			(strtolower($args[0]) !== strtolower($sender->getName()) || !$sender->hasPermission("invsee.enderinventory.view.self"))
 		){
 			$sender->sendMessage(TextFormat::RED . "You don't have permission to view this inventory.");
 			return true;

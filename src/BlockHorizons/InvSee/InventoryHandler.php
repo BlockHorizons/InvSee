@@ -30,13 +30,13 @@ class InventoryHandler{
 	}
 
 	public function onJoin(Player $player) : void{
-		if(isset($this->players[$name = $player->getLowerCaseName()])){
+		if(isset($this->players[$name = strtolower($player->getName())])){
 			$this->players[$name]->onJoin($player);
 		}
 	}
 
 	public function onQuit(Player $player) : void{
-		if(isset($this->players[$name = $player->getLowerCaseName()])){
+		if(isset($this->players[$name = strtolower($player->getName())])){
 			$this->players[$name]->onQuit($player);
 		}
 	}
