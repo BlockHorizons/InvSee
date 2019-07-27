@@ -1,7 +1,7 @@
 name: InvSee
 author: BlockHorizons
 main: BlockHorizons\InvSee\Loader
-api: 3.0.0
+api: 3.9.0
 version: 1.0.0
 
 permissions:
