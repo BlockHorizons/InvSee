@@ -6,6 +6,7 @@ namespace BlockHorizons\InvSee\listeners;
 
 use BlockHorizons\InvSee\utils\InvCombiner;
 use pocketmine\inventory\Inventory;
+use pocketmine\item\Item;
 
 class InvSeeArmorInventoryChangeListener implements InvSeeListener{
 
@@ -16,7 +17,7 @@ class InvSeeArmorInventoryChangeListener implements InvSeeListener{
 		$this->inventory = $inventory;
 	}
 
-	public function onContentChange(Inventory $inventory) : void{
+	public function onContentChange(Inventory $inventory, array $old_contents) : void{
 		$listeners = InvSeeListeners::find($this->inventory->getChangeListeners());
 		$this->inventory->removeChangeListeners(...$listeners);
 		foreach(InvCombiner::MENU_TO_ARMOR_SLOTS as $menu_slot => $armor_slot){
@@ -29,7 +30,7 @@ class InvSeeArmorInventoryChangeListener implements InvSeeListener{
 		}
 	}
 
-	public function onSlotChange(Inventory $inventory, int $slot) : void{
+	public function onSlotChange(Inventory $inventory, int $slot, Item $old_item) : void{
 		if(isset(InvCombiner::MENU_TO_ARMOR_SLOTS[$slot])){
 			$listeners = InvSeeListeners::find($this->inventory->getChangeListeners());
 			$this->inventory->removeChangeListeners(...$listeners);
