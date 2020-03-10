@@ -17,7 +17,7 @@ class PlayerArmorInventoryChangeListener implements InvSeeListener{
 		$this->inventory = $inventory;
 	}
 
-	public function onContentChange(Inventory $inventor, array $old_contents) : void{
+	public function onContentChange(Inventory $inventory, array $old_contents) : void{
 		$listeners = InvSeeListeners::find($this->inventory->getChangeListeners());
 		$this->inventory->removeChangeListeners(...$listeners);
 		foreach(InvCombiner::ARMOR_TO_MENU_SLOTS as $armor_slot => $menu_slot){
