@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BlockHorizons\InvSee\utils;
 
+use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\ItemIds;
 use pocketmine\utils\TextFormat;
@@ -24,6 +25,11 @@ final class InvCombiner{
 		51 => 3
 	];
 
+	/**
+	 * @param array<int, Item> $inventory
+	 * @param array<int, Item> $armor
+	 * @return array<int, Item>
+	 */
 	public static function combine(array $inventory, array $armor) : array{
 		foreach($armor as $slot => $item){
 			$inventory[self::ARMOR_TO_MENU_SLOTS[$slot]] = $item;
@@ -33,6 +39,11 @@ final class InvCombiner{
 		return $inventory;
 	}
 
+	/**
+	 * @param array<int, Item> $inventory
+	 * @param array<int, Item>|null $main
+	 * @param array<int, Item>|null $armor
+	 */
 	public static function split(array $inventory, ?array &$main, ?array &$armor) : void{
 		$main = [];
 		for($i = 0; $i < 36; ++$i){
@@ -49,10 +60,14 @@ final class InvCombiner{
 		}
 	}
 
+	/**
+	 * @param array<int, Item> $inventory
+	 */
 	private static function decorate(array &$inventory) : void{
-		$inventory[45] = $inventory[53] = ItemFactory::get(ItemIds::STAINED_GLASS_PANE, 15)->setCustomName("");
-		$inventory[46] = ItemFactory::get(ItemIds::STAINED_GLASS_PANE, 15)->setCustomName(TextFormat::RESET . TextFormat::AQUA . "Helmet ->");
-		$inventory[49] = ItemFactory::get(ItemIds::STAINED_GLASS_PANE, 15)->setCustomName(TextFormat::RESET . TextFormat::AQUA . "<- Chestplate | Leggings ->");
-		$inventory[52] = ItemFactory::get(ItemIds::STAINED_GLASS_PANE, 15)->setCustomName(TextFormat::RESET . TextFormat::AQUA . "<- Boots");
+		$item_factory = ItemFactory::getInstance();
+		$inventory[45] = $inventory[53] = $item_factory->get(ItemIds::STAINED_GLASS_PANE, 15)->setCustomName("");
+		$inventory[46] = $item_factory->get(ItemIds::STAINED_GLASS_PANE, 15)->setCustomName(TextFormat::RESET . TextFormat::AQUA . "Helmet ->");
+		$inventory[49] = $item_factory->get(ItemIds::STAINED_GLASS_PANE, 15)->setCustomName(TextFormat::RESET . TextFormat::AQUA . "<- Chestplate | Leggings ->");
+		$inventory[52] = $item_factory->get(ItemIds::STAINED_GLASS_PANE, 15)->setCustomName(TextFormat::RESET . TextFormat::AQUA . "<- Boots");
 	}
 }

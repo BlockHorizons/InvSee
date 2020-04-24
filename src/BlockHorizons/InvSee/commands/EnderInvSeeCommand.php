@@ -6,6 +6,7 @@ namespace BlockHorizons\InvSee\commands;
 
 use InvalidArgumentException;
 use pocketmine\command\CommandSender;
+use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
 class EnderInvSeeCommand extends BaseCommand{
@@ -17,6 +18,11 @@ class EnderInvSeeCommand extends BaseCommand{
 	public function onCommand(CommandSender $sender, string $commandLabel, array $args) : bool{
 		if(!isset($args[0])){
 			return false;
+		}
+
+		if(!($sender instanceof Player)){
+			$sender->sendMessage(TextFormat::RED . "This command can only be used as a player.");
+			return true;
 		}
 
 		if(
