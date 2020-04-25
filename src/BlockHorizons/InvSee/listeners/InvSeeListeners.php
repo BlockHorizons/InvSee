@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace BlockHorizons\InvSee\listeners;
 
-use pocketmine\inventory\InventoryChangeListener;
+use pocketmine\inventory\InventoryListener;
 
 final class InvSeeListeners{
 
 	/**
-	 * @param InventoryChangeListener[] $listeners
+	 * @param InventoryListener[] $listeners
 	 * @return InvSeeListener[]
 	 */
 	public static function find(array $listeners) : array{

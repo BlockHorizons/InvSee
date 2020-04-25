@@ -7,7 +7,7 @@ namespace BlockHorizons\InvSee\listeners;
 use pocketmine\inventory\Inventory;
 use pocketmine\item\Item;
 
-class PlayerInventoryChangeListener implements InvSeeListener{
+class PlayerInventoryListener implements InvSeeListener{
 
 	/** @var Inventory */
 	protected $inventory;
@@ -17,14 +17,14 @@ class PlayerInventoryChangeListener implements InvSeeListener{
 	}
 
 	public function onContentChange(Inventory $inventory, array $old_contents) : void{
-		$listeners = InvSeeListeners::find($this->inventory->getChangeListeners());
-		$this->inventory->removeChangeListeners(...$listeners);
+		$listeners = InvSeeListeners::find($this->inventory->getListeners());
+		$this->inventory->removeListeners(...$listeners);
 		foreach($inventory->getContents() as $slot => $item){
 			if($slot < 36){
 				$this->inventory->setItem($slot, $item);
 			}
 		}
-		$this->inventory->addChangeListeners(...$listeners);
+		$this->inventory->addListeners(...$listeners);
 
 		foreach($this->inventory->getViewers() as $viewer){
 			$viewer->getNetworkSession()->getInvManager()->syncContents($this->inventory);
@@ -33,10 +33,10 @@ class PlayerInventoryChangeListener implements InvSeeListener{
 
 	public function onSlotChange(Inventory $inventory, int $slot, Item $old_item) : void{
 		if($slot < 36){
-			$listeners = InvSeeListeners::find($this->inventory->getChangeListeners());
-			$this->inventory->removeChangeListeners(...$listeners);
+			$listeners = InvSeeListeners::find($this->inventory->getListeners());
+			$this->inventory->removeListeners(...$listeners);
 			$this->inventory->setItem($slot, $inventory->getItem($slot));
-			$this->inventory->addChangeListeners(...$listeners);
+			$this->inventory->addListeners(...$listeners);
 		}
 	}
 }

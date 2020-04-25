@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace BlockHorizons\InvSee;
 
-use BlockHorizons\InvSee\listeners\InvSeeArmorInventoryChangeListener;
+use BlockHorizons\InvSee\listeners\InvSeeArmorInventoryListener;
 use BlockHorizons\InvSee\listeners\InvSeeListeners;
-use BlockHorizons\InvSee\listeners\PlayerArmorInventoryChangeListener;
-use BlockHorizons\InvSee\listeners\PlayerEnderInventoryChangeListener;
-use BlockHorizons\InvSee\listeners\PlayerInventoryChangeListener;
+use BlockHorizons\InvSee\listeners\PlayerArmorInventoryListener;
+use BlockHorizons\InvSee\listeners\PlayerEnderInventoryListener;
+use BlockHorizons\InvSee\listeners\PlayerInventoryListener;
 use BlockHorizons\InvSee\utils\InvCombiner;
 use muqsit\invmenu\InvMenu;
 use muqsit\invmenu\SharedInvMenu;
@@ -50,15 +50,15 @@ class InvSeePlayer{
 		$player->getArmorInventory()->setContents($armor_inventory);
 		$player->getEnderChestInventory()->setContents($this->ender_inventory_menu->getInventory()->getContents());
 
-		$player->getInventory()->addChangeListeners(new PlayerInventoryChangeListener($this->inventory_menu->getInventory()));
-		$player->getArmorInventory()->addChangeListeners(new PlayerArmorInventoryChangeListener($this->inventory_menu->getInventory()));
-		$player->getEnderChestInventory()->addChangeListeners(new PlayerEnderInventoryChangeListener($this->ender_inventory_menu->getInventory()));
+		$player->getInventory()->addListeners(new PlayerInventoryListener($this->inventory_menu->getInventory()));
+		$player->getArmorInventory()->addListeners(new PlayerArmorInventoryListener($this->inventory_menu->getInventory()));
+		$player->getEnderChestInventory()->addListeners(new PlayerEnderInventoryListener($this->ender_inventory_menu->getInventory()));
 
-		$this->inventory_menu->getInventory()->addChangeListeners(
-			new PlayerInventoryChangeListener($player->getInventory()),
-			new InvSeeArmorInventoryChangeListener($player->getArmorInventory())
+		$this->inventory_menu->getInventory()->addListeners(
+			new PlayerInventoryListener($player->getInventory()),
+			new InvSeeArmorInventoryListener($player->getArmorInventory())
 		);
-		$this->ender_inventory_menu->getInventory()->addChangeListeners(new PlayerEnderInventoryChangeListener($player->getEnderChestInventory()));
+		$this->ender_inventory_menu->getInventory()->addListeners(new PlayerEnderInventoryListener($player->getEnderChestInventory()));
 	}
 
 	private function destroyPlayer(Player $player) : void{
@@ -69,7 +69,7 @@ class InvSeePlayer{
 			$this->inventory_menu->getInventory(),
 			$this->ender_inventory_menu->getInventory()
 		] as $inventory){
-			$inventory->removeChangeListeners(...InvSeeListeners::find($inventory->getChangeListeners()));
+			$inventory->removeListeners(...InvSeeListeners::find($inventory->getListeners()));
 		}
 	}
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace BlockHorizons\InvSee\listeners;
 
-use pocketmine\inventory\InventoryChangeListener;
+use pocketmine\inventory\InventoryListener;
 
-interface InvSeeListener extends InventoryChangeListener{
+interface InvSeeListener extends InventoryListener{
 }

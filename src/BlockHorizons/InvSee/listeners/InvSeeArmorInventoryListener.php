@@ -8,7 +8,7 @@ use BlockHorizons\InvSee\utils\InvCombiner;
 use pocketmine\inventory\Inventory;
 use pocketmine\item\Item;
 
-class InvSeeArmorInventoryChangeListener implements InvSeeListener{
+class InvSeeArmorInventoryListener implements InvSeeListener{
 
 	/** @var Inventory */
 	protected $inventory;
@@ -18,12 +18,12 @@ class InvSeeArmorInventoryChangeListener implements InvSeeListener{
 	}
 
 	public function onContentChange(Inventory $inventory, array $old_contents) : void{
-		$listeners = InvSeeListeners::find($this->inventory->getChangeListeners());
-		$this->inventory->removeChangeListeners(...$listeners);
+		$listeners = InvSeeListeners::find($this->inventory->getListeners());
+		$this->inventory->removeListeners(...$listeners);
 		foreach(InvCombiner::MENU_TO_ARMOR_SLOTS as $menu_slot => $armor_slot){
 			$this->inventory->setItem($armor_slot, $inventory->getItem($menu_slot));
 		}
-		$this->inventory->addChangeListeners(...$listeners);
+		$this->inventory->addListeners(...$listeners);
 
 		foreach($this->inventory->getViewers() as $viewer){
 			$viewer->getNetworkSession()->getInvManager()->syncContents($this->inventory);
@@ -32,10 +32,10 @@ class InvSeeArmorInventoryChangeListener implements InvSeeListener{
 
 	public function onSlotChange(Inventory $inventory, int $slot, Item $old_item) : void{
 		if(isset(InvCombiner::MENU_TO_ARMOR_SLOTS[$slot])){
-			$listeners = InvSeeListeners::find($this->inventory->getChangeListeners());
-			$this->inventory->removeChangeListeners(...$listeners);
+			$listeners = InvSeeListeners::find($this->inventory->getListeners());
+			$this->inventory->removeListeners(...$listeners);
 			$this->inventory->setItem(InvCombiner::MENU_TO_ARMOR_SLOTS[$slot], $inventory->getItem($slot));
-			$this->inventory->addChangeListeners(...$listeners);
+			$this->inventory->addListeners(...$listeners);
 		}
 	}
 }
