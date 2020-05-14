@@ -8,12 +8,12 @@ use BlockHorizons\InvSee\Loader;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
 use pocketmine\command\ConsoleCommandSender;
-use pocketmine\command\PluginIdentifiableCommand;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\plugin\Plugin;
+use pocketmine\plugin\PluginOwned;
 use pocketmine\utils\TextFormat;
 
-abstract class BaseCommand extends Command implements PluginIdentifiableCommand{
+abstract class BaseCommand extends Command implements PluginOwned{
 
 	protected const FLAG_DENY_CONSOLE = 0b10000000000000;
 
@@ -58,10 +58,7 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand{
 		return $this->loader;
 	}
 
-	/**
-	 * @return Loader
-	 */
-	public function getPlugin() : Plugin{
+	public function getOwningPlugin() : Plugin{
 		return $this->loader;
 	}
 

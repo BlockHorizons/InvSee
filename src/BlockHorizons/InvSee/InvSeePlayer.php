@@ -50,15 +50,15 @@ class InvSeePlayer{
 		$player->getArmorInventory()->setContents($armor_inventory);
 		$player->getEnderChestInventory()->setContents($this->ender_inventory_menu->getInventory()->getContents());
 
-		$player->getInventory()->addListeners(new PlayerInventoryListener($this->inventory_menu->getInventory()));
-		$player->getArmorInventory()->addListeners(new PlayerArmorInventoryListener($this->inventory_menu->getInventory()));
-		$player->getEnderChestInventory()->addListeners(new PlayerEnderInventoryListener($this->ender_inventory_menu->getInventory()));
+		$player->getInventory()->getListeners()->add(new PlayerInventoryListener($this->inventory_menu->getInventory()));
+		$player->getArmorInventory()->getListeners()->add(new PlayerArmorInventoryListener($this->inventory_menu->getInventory()));
+		$player->getEnderChestInventory()->getListeners()->add(new PlayerEnderInventoryListener($this->ender_inventory_menu->getInventory()));
 
-		$this->inventory_menu->getInventory()->addListeners(
+		$this->inventory_menu->getInventory()->getListeners()->add(
 			new PlayerInventoryListener($player->getInventory()),
 			new InvSeeArmorInventoryListener($player->getArmorInventory())
 		);
-		$this->ender_inventory_menu->getInventory()->addListeners(new PlayerEnderInventoryListener($player->getEnderChestInventory()));
+		$this->ender_inventory_menu->getInventory()->getListeners()->add(new PlayerEnderInventoryListener($player->getEnderChestInventory()));
 	}
 
 	private function destroyPlayer(Player $player) : void{
@@ -69,7 +69,7 @@ class InvSeePlayer{
 			$this->inventory_menu->getInventory(),
 			$this->ender_inventory_menu->getInventory()
 		] as $inventory){
-			$inventory->removeListeners(...InvSeeListeners::find($inventory->getListeners()));
+			$inventory->getListeners()->remove(...InvSeeListeners::find($inventory->getListeners()));
 		}
 	}
 

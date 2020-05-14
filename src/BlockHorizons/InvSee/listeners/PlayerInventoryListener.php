@@ -18,13 +18,13 @@ class PlayerInventoryListener implements InvSeeListener{
 
 	public function onContentChange(Inventory $inventory, array $old_contents) : void{
 		$listeners = InvSeeListeners::find($this->inventory->getListeners());
-		$this->inventory->removeListeners(...$listeners);
+		$this->inventory->getListeners()->remove(...$listeners);
 		foreach($inventory->getContents() as $slot => $item){
 			if($slot < 36){
 				$this->inventory->setItem($slot, $item);
 			}
 		}
-		$this->inventory->addListeners(...$listeners);
+		$this->inventory->getListeners()->add(...$listeners);
 
 		foreach($this->inventory->getViewers() as $viewer){
 			$viewer->getNetworkSession()->getInvManager()->syncContents($this->inventory);
@@ -34,9 +34,9 @@ class PlayerInventoryListener implements InvSeeListener{
 	public function onSlotChange(Inventory $inventory, int $slot, Item $old_item) : void{
 		if($slot < 36){
 			$listeners = InvSeeListeners::find($this->inventory->getListeners());
-			$this->inventory->removeListeners(...$listeners);
+			$this->inventory->getListeners()->remove(...$listeners);
 			$this->inventory->setItem($slot, $inventory->getItem($slot));
-			$this->inventory->addListeners(...$listeners);
+			$this->inventory->getListeners()->add(...$listeners);
 		}
 	}
 }

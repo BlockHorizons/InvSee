@@ -18,15 +18,15 @@ class PlayerEnderInventoryListener implements InvSeeListener{
 
 	public function onContentChange(Inventory $inventory, array $old_contents) : void{
 		$listeners = InvSeeListeners::find($this->inventory->getListeners());
-		$this->inventory->removeListeners(...$listeners);
+		$this->inventory->getListeners()->remove(...$listeners);
 		$this->inventory->setContents($inventory->getContents());
-		$this->inventory->addListeners(...$listeners);
+		$this->inventory->getListeners()->add(...$listeners);
 	}
 
 	public function onSlotChange(Inventory $inventory, int $slot, Item $old_item) : void{
 		$listeners = InvSeeListeners::find($this->inventory->getListeners());
-		$this->inventory->removeListeners(...$listeners);
+		$this->inventory->getListeners()->remove(...$listeners);
 		$this->inventory->setItem($slot, $inventory->getItem($slot));
-		$this->inventory->addListeners(...$listeners);
+		$this->inventory->getListeners()->add(...$listeners);
 	}
 }
