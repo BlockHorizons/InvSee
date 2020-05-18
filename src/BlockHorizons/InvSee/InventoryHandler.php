@@ -42,7 +42,7 @@ class InventoryHandler{
 	}
 
 	public function tryGarbageCollecting(string $player, int $delay = 1) : void{
-		$this->scheduler->scheduleDelayedTask(new ClosureTask(function(int $currentTick) use($player) : void{
+		$this->scheduler->scheduleDelayedTask(new ClosureTask(function() use($player) : void{
 			if(isset($this->players[$name = strtolower($player)])){
 				$player = $this->players[$name];
 				if(
