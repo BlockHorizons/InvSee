@@ -11,8 +11,8 @@ use BlockHorizons\InvSee\listeners\PlayerEnderInventoryListener;
 use BlockHorizons\InvSee\listeners\PlayerInventoryListener;
 use BlockHorizons\InvSee\utils\InvCombiner;
 use muqsit\invmenu\InvMenu;
-use muqsit\invmenu\SharedInvMenu;
-use pocketmine\inventory\transaction\action\SlotChangeAction;
+use muqsit\invmenu\transaction\InvMenuTransaction;
+use muqsit\invmenu\transaction\InvMenuTransactionResult;
 use pocketmine\item\Item;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
@@ -25,10 +25,10 @@ class InvSeePlayer{
 	/** @var string */
 	protected $player;
 
-	/** @var SharedInvMenu */
+	/** @var InvMenu */
 	protected $inventory_menu;
 
-	/** @var SharedInvMenu */
+	/** @var InvMenu */
 	protected $ender_inventory_menu;
 
 	public function __construct(InventoryHandler $handler, string $player){
@@ -76,13 +76,19 @@ class InvSeePlayer{
 	private function init(InventoryHandler $handler) : void{
 		$this->inventory_menu = InvMenu::create(InvMenu::TYPE_DOUBLE_CHEST);
 		$this->inventory_menu->setName($this->player . "'s Inventory");
-		$this->inventory_menu->setListener(static function(Player $player, Item $in, Item $out, SlotChangeAction $action) : bool{
-			$slot = $action->getSlot();
-			return $slot < 36 || isset(InvCombiner::MENU_TO_ARMOR_SLOTS[$slot]);
+		$this->inventory_menu->setListener(function(InvMenuTransaction $transaction) : InvMenuTransactionResult{
+			$player = $transaction->getPlayer();
+			$permission = strcmp($player->getName(), $this->player) === 0 ? "invsee.inventory.modify.self" : "invsee.inventory.modify";
+			$slot = $transaction->getAction()->getSlot();
+			return ($slot < 36 || isset(InvCombiner::MENU_TO_ARMOR_SLOTS[$slot])) && $player->hasPermission($permission) ? $transaction->continue() : $transaction->discard();
 		});
 
 		$this->ender_inventory_menu = InvMenu::create(InvMenu::TYPE_CHEST);
 		$this->ender_inventory_menu->setName($this->player . "'s Ender Inventory");
+		$this->ender_inventory_menu->setListener(function(InvMenuTransaction $transaction) : InvMenuTransactionResult{
+			$player = $transaction->getPlayer();
+			return $player->hasPermission(strcmp($player->getName(), $this->player) === 0 ? "invsee.enderinventory.modify.self" : "invsee.enderinventory.modify") ? $transaction->continue() : $transaction->discard();
+		});
 
 		$server = Server::getInstance();
 		$player = $server->getPlayerExact($this->player);
@@ -173,11 +179,11 @@ class InvSeePlayer{
 		}
 	}
 
-	public function getInventoryMenu() : SharedInvMenu{
+	public function getInventoryMenu() : InvMenu{
 		return $this->inventory_menu;
 	}
 
-	public function getEnderChestInventoryMenu() : SharedInvMenu{
+	public function getEnderChestInventoryMenu() : InvMenu{
 		return $this->ender_inventory_menu;
 	}
 }
