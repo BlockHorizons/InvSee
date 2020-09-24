@@ -78,7 +78,7 @@ class InvSeePlayer{
 		$this->inventory_menu->setName($this->player . "'s Inventory");
 		$this->inventory_menu->setListener(function(InvMenuTransaction $transaction) : InvMenuTransactionResult{
 			$player = $transaction->getPlayer();
-			$permission = strcmp($player->getName(), $this->player) === 0 ? "invsee.inventory.modify.self" : "invsee.inventory.modify";
+			$permission = strtolower($player->getName()) === strtolower($this->player) ? "invsee.inventory.modify.self" : "invsee.inventory.modify";
 			$slot = $transaction->getAction()->getSlot();
 			return ($slot < 36 || isset(InvCombiner::MENU_TO_ARMOR_SLOTS[$slot])) && $player->hasPermission($permission) ? $transaction->continue() : $transaction->discard();
 		});
@@ -87,7 +87,7 @@ class InvSeePlayer{
 		$this->ender_inventory_menu->setName($this->player . "'s Ender Inventory");
 		$this->ender_inventory_menu->setListener(function(InvMenuTransaction $transaction) : InvMenuTransactionResult{
 			$player = $transaction->getPlayer();
-			return $player->hasPermission(strcmp($player->getName(), $this->player) === 0 ? "invsee.enderinventory.modify.self" : "invsee.enderinventory.modify") ? $transaction->continue() : $transaction->discard();
+			return $player->hasPermission(strtolower($player->getName()) === strtolower($this->player) ? "invsee.enderinventory.modify.self" : "invsee.enderinventory.modify") ? $transaction->continue() : $transaction->discard();
 		});
 
 		$server = Server::getInstance();
