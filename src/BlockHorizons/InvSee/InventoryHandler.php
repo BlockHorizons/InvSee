@@ -66,7 +66,7 @@ class InventoryHandler {
 	}
 
 	public function onInventoryClose(Player $player, InvSeeInventory $inventory): void {
-		if(count($inventory->getViewers()) <= 1) {
+		if(count($inventory->getViewers()) < 1) {
 			if($this->spying[$key = strtolower($inventory->getSpying())]->getPlayer() === null) {
 				$inventory->syncOffline();
 			}
