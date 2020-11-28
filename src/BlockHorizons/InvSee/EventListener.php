@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BlockHorizons\InvSee;
 
 use pocketmine\event\Listener;
+use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 
@@ -18,10 +19,10 @@ class EventListener implements Listener{
 	}
 
 	/**
-	 * @param PlayerLoginEvent $event
-	 * @priority MONITOR
+	 * @param PlayerJoinEvent $event
+	 * @priority LOWEST
 	 */
-	public function onPlayerLogin(PlayerLoginEvent $event) : void{
+	public function onPlayerJoin(PlayerJoinEvent $event) : void{
 		$this->handler->onJoin($event->getPlayer());
 	}
 

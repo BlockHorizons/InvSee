@@ -15,7 +15,6 @@ class Loader extends PluginBase{
 	public function onEnable() : void{
 		$this->handler = new InventoryHandler($this);
 		BaseCommand::registerDefaults($this);
-
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
 	}
 
