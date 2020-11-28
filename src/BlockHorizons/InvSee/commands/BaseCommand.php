@@ -24,8 +24,8 @@ abstract class BaseCommand extends Command implements PluginIdentifiableCommand 
 		$commands = [];
 
 		foreach([
-			EnderInvSeeCommand::class => ["enderinvsee", "View a player's ender chest inventory.", "/enderinvsee <player>", "invsee.enderinventory.view"],
-			InvSeeCommand::class => ["invsee", "View a player's inventory.", "/invsee <player>", "invsee.inventory.view"]
+			EnderInvSeeCommand::class => ["enderinvsee", "показывает инвентарь игрока в эндер сундуке.", "/enderinvsee <player>", "invsee.enderinventory.view"],
+			InvSeeCommand::class => ["invsee", "показывает инвентарь игрока.", "/invsee <player>", "invsee.inventory.view"]
 		] as $class => [$name, $desc, $usage, $perm]) {
 			$commands[$name] = new $class($loader, $name, $desc, $usage);
 			$commands[$name]->setPermission($perm);
