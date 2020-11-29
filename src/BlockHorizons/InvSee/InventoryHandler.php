@@ -84,7 +84,7 @@ class InventoryHandler {
 		$menu = $data->get($inventory_class);
 		if($menu === null) {
 			$menu = $data->create($inventory_class);
-			$menu->setName($player . "инвентарь");
+			$menu->setName($player . " инвентарь");
 			$menu->setInventoryCloseListener([$this, "onInventoryClose"]);
 			$menu->setListener([$this, "handleSpyInventoryTransaction"]);
 		}
