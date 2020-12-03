@@ -22,13 +22,23 @@ use RuntimeException;
 
 class InvSeePlayer{
 
+	private static function destroyInvMenu(InvMenu $inv_menu) : void{
+		foreach($inv_menu->getInventory()->getViewers() as $viewer){
+			if($viewer->isConnected()){
+				$viewer->removeCurrentWindow();
+			}
+		}
+		$inv_menu->setListener(null);
+		$inv_menu->setInventoryCloseListener(null);
+	}
+
 	/** @var string */
 	protected $player;
 
-	/** @var InvMenu */
+	/** @var InvMenu|null */
 	protected $inventory_menu;
 
-	/** @var InvMenu */
+	/** @var InvMenu|null */
 	protected $ender_inventory_menu;
 
 	public function __construct(InventoryHandler $handler, string $player){
@@ -45,6 +55,9 @@ class InvSeePlayer{
 	}
 
 	private function initPlayer(Player $player) : void{
+		assert($this->inventory_menu !== null);
+		assert($this->ender_inventory_menu !== null);
+
 		InvCombiner::split($this->inventory_menu->getInventory()->getContents(), $inventory, $armor_inventory);
 		$player->getInventory()->setContents($inventory);
 		$player->getArmorInventory()->setContents($armor_inventory);
@@ -62,6 +75,8 @@ class InvSeePlayer{
 	}
 
 	private function destroyPlayer(Player $player) : void{
+		assert($this->inventory_menu !== null);
+		assert($this->ender_inventory_menu !== null);
 		foreach([
 			$player->getInventory(),
 			$player->getArmorInventory(),
@@ -74,6 +89,8 @@ class InvSeePlayer{
 	}
 
 	private function init(InventoryHandler $handler) : void{
+		assert($this->inventory_menu !== null);
+		assert($this->ender_inventory_menu !== null);
 		$this->inventory_menu = InvMenu::create(InvMenu::TYPE_DOUBLE_CHEST);
 		$this->inventory_menu->setName($this->player . "'s Inventory");
 		$this->inventory_menu->setListener(function(InvMenuTransaction $transaction) : InvMenuTransactionResult{
@@ -147,6 +164,8 @@ class InvSeePlayer{
 	}
 
 	public function destroy() : void{
+		assert($this->inventory_menu !== null);
+		assert($this->ender_inventory_menu !== null);
 		$server = Server::getInstance();
 		$player = $server->getPlayerExact($this->player);
 		if($player === null){
@@ -177,6 +196,12 @@ class InvSeePlayer{
 		}else{
 			$this->destroyPlayer($player);
 		}
+
+		self::destroyInvMenu($this->inventory_menu);
+		$this->inventory_menu = null;
+
+		self::destroyInvMenu($this->ender_inventory_menu);
+		$this->ender_inventory_menu = null;
 	}
 
 	public function getInventoryMenu() : InvMenu{
