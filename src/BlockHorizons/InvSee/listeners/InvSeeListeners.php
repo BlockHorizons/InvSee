@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace BlockHorizons\InvSee\listeners;
 
-use Ds\Set;
 use pocketmine\inventory\InventoryListener;
 
 final class InvSeeListeners{
 
 	/**
-	 * @param Set<InventoryListener> $listeners
-	 * @return Set<InvSeeListener>
+	 * @param InventoryListener[] $listeners
+	 * @return InvSeeListener[]
 	 */
-	public static function find(Set $listeners) : Set{
-		$result = new Set();
+	public static function find(array $listeners) : array{
+		$result = [];
 
 		foreach($listeners as $listener){
 			if($listener instanceof InvSeeListener){
-				$result->add($listener);
+				$result[spl_object_id($listener)] = $listener;
 			}
 		}
 

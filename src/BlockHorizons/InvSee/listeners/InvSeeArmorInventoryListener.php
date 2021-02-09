@@ -18,7 +18,7 @@ class InvSeeArmorInventoryListener implements InvSeeListener{
 	}
 
 	public function onContentChange(Inventory $inventory, array $old_contents) : void{
-		$listeners = InvSeeListeners::find($this->inventory->getListeners());
+		$listeners = InvSeeListeners::find($this->inventory->getListeners()->toArray());
 		$this->inventory->getListeners()->remove(...$listeners);
 		foreach(InvCombiner::MENU_TO_ARMOR_SLOTS as $menu_slot => $armor_slot){
 			$this->inventory->setItem($armor_slot, $inventory->getItem($menu_slot));
@@ -32,7 +32,7 @@ class InvSeeArmorInventoryListener implements InvSeeListener{
 
 	public function onSlotChange(Inventory $inventory, int $slot, Item $old_item) : void{
 		if(isset(InvCombiner::MENU_TO_ARMOR_SLOTS[$slot])){
-			$listeners = InvSeeListeners::find($this->inventory->getListeners());
+			$listeners = InvSeeListeners::find($this->inventory->getListeners()->toArray());
 			$this->inventory->getListeners()->remove(...$listeners);
 			$this->inventory->setItem(InvCombiner::MENU_TO_ARMOR_SLOTS[$slot], $inventory->getItem($slot));
 			$this->inventory->getListeners()->add(...$listeners);

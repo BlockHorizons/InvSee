@@ -13,6 +13,7 @@ use BlockHorizons\InvSee\utils\InvCombiner;
 use muqsit\invmenu\InvMenu;
 use muqsit\invmenu\transaction\InvMenuTransaction;
 use muqsit\invmenu\transaction\InvMenuTransactionResult;
+use pocketmine\inventory\Inventory;
 use pocketmine\item\Item;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
@@ -77,6 +78,7 @@ class InvSeePlayer{
 	private function destroyPlayer(Player $player) : void{
 		assert($this->inventory_menu !== null);
 		assert($this->ender_inventory_menu !== null);
+		/** @var Inventory $inventory */
 		foreach([
 			$player->getInventory(),
 			$player->getArmorInventory(),
@@ -84,7 +86,7 @@ class InvSeePlayer{
 			$this->inventory_menu->getInventory(),
 			$this->ender_inventory_menu->getInventory()
 		] as $inventory){
-			$inventory->getListeners()->remove(...InvSeeListeners::find($inventory->getListeners()));
+			$inventory->getListeners()->remove(...InvSeeListeners::find($inventory->getListeners()->toArray()));
 		}
 	}
 
@@ -126,7 +128,7 @@ class InvSeePlayer{
 			$inventoryTag = $nbt->getListTag("Inventory");
 			if($inventoryTag !== null){
 				/** @var CompoundTag $item */
-				foreach($inventoryTag as $i => $item){
+				foreach($inventoryTag->getIterator() as $i => $item){
 					$slot = $item->getByte("Slot");
 					if($slot >= 0 && $slot < 9){
 						// old hotbar stuff
@@ -140,7 +142,7 @@ class InvSeePlayer{
 				$enderChestInventoryTag = $nbt->getListTag("EnderChestInventory");
 				if($enderChestInventoryTag !== null){
 					/** @var CompoundTag $item */
-					foreach($enderChestInventoryTag as $i => $item){
+					foreach($enderChestInventoryTag->getIterator() as $i => $item){
 						$ender_inventory[$item->getByte("Slot")] = Item::nbtDeserialize($item);
 					}
 				}
