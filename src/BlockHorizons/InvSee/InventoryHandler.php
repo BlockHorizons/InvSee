@@ -26,7 +26,7 @@ class InventoryHandler{
 	}
 
 	public function get(string $player) : InvSeePlayer{
-		return $this->players[$player = strtolower($player)] ?? ($this->players[$player] = new InvSeePlayer($this, $player));
+		return $this->players[strtolower($player)] ??= new InvSeePlayer($this, $player);
 	}
 
 	public function onJoin(Player $player) : void{
