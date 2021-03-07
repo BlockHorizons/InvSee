@@ -34,24 +34,6 @@ abstract class BaseCommand extends Command implements PluginOwned{
 	}
 
 	/**
-	 * Registers all the default InvSee commands.
-	 *
-	 * @param Loader $loader
-	 */
-	public static function registerDefaults(Loader $loader) : void{
-		$commands = [];
-
-		foreach([
-			EnderInvSeeCommand::class => ["enderinvsee", "View a player's ender chest inventory.", "/enderinvsee <player>"],
-			InvSeeCommand::class => ["invsee", "View a player's inventory.", "/invsee <player>"]
-		] as $class => [$name, $desc, $usage]){
-			$commands[$name] = new $class($loader, $name, $desc, $usage);
-		}
-
-		$loader->getServer()->getCommandMap()->registerAll($loader->getName(), $commands);
-	}
-
-	/**
 	 * @return Loader
 	 */
 	public function getLoader() : Loader{

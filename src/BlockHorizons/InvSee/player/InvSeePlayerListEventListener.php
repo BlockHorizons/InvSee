@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace BlockHorizons\InvSee;
+namespace BlockHorizons\InvSee\player;
 
+use BlockHorizons\InvSee\Loader;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
-use pocketmine\event\player\PlayerLoginEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 
-class EventListener implements Listener{
+class InvSeePlayerListEventListener implements Listener{
 
-	/** @var InventoryHandler */
-	protected $handler;
+	/** @var InvSeePlayerList */
+	protected $player_list;
 
 	public function __construct(Loader $loader){
-		$this->handler = $loader->getInventoryHandler();
+		$this->player_list = $loader->getPlayerList();
 	}
 
 	/**
@@ -23,7 +23,7 @@ class EventListener implements Listener{
 	 * @priority LOWEST
 	 */
 	public function onPlayerJoin(PlayerJoinEvent $event) : void{
-		$this->handler->onJoin($event->getPlayer());
+		$this->player_list->onPlayerJoin($event->getPlayer());
 	}
 
 	/**
@@ -31,6 +31,6 @@ class EventListener implements Listener{
 	 * @priority MONITOR
 	 */
 	public function onPlayerQuit(PlayerQuitEvent $event) : void{
-		$this->handler->onQuit($event->getPlayer());
+		$this->player_list->onPlayerQuit($event->getPlayer());
 	}
 }

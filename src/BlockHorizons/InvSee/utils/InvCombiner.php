@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace BlockHorizons\InvSee\utils;
 
+use pocketmine\block\VanillaBlocks;
 use pocketmine\item\Item;
-use pocketmine\item\ItemFactory;
-use pocketmine\item\ItemIds;
 use pocketmine\utils\TextFormat;
 
 final class InvCombiner{
@@ -64,10 +63,10 @@ final class InvCombiner{
 	 * @param array<int, Item> $inventory
 	 */
 	private static function decorate(array &$inventory) : void{
-		$item_factory = ItemFactory::getInstance();
-		$inventory[45] = $inventory[53] = $item_factory->get(ItemIds::STAINED_GLASS_PANE, 15)->setCustomName("");
-		$inventory[46] = $item_factory->get(ItemIds::STAINED_GLASS_PANE, 15)->setCustomName(TextFormat::RESET . TextFormat::AQUA . "Helmet ->");
-		$inventory[49] = $item_factory->get(ItemIds::STAINED_GLASS_PANE, 15)->setCustomName(TextFormat::RESET . TextFormat::AQUA . "<- Chestplate | Leggings ->");
-		$inventory[52] = $item_factory->get(ItemIds::STAINED_GLASS_PANE, 15)->setCustomName(TextFormat::RESET . TextFormat::AQUA . "<- Boots");
+		$glass_pane = VanillaBlocks::BLACK_STAINED_GLASS_PANE();
+		$inventory[45] = $inventory[53] = $glass_pane->asItem()->setCustomName("");
+		$inventory[46] = $glass_pane->asItem()->setCustomName(TextFormat::RESET . TextFormat::AQUA . "Helmet ->");
+		$inventory[49] = $glass_pane->asItem()->setCustomName(TextFormat::RESET . TextFormat::AQUA . "<- Chestplate | Leggings ->");
+		$inventory[52] = $glass_pane->asItem()->setCustomName(TextFormat::RESET . TextFormat::AQUA . "<- Boots");
 	}
 }

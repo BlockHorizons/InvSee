@@ -4,21 +4,41 @@ declare(strict_types=1);
 
 namespace BlockHorizons\InvSee;
 
-use BlockHorizons\InvSee\commands\BaseCommand;
+use BlockHorizons\InvSee\commands\EnderInvSeeCommand;
+use BlockHorizons\InvSee\commands\InvSeeCommand;
+use BlockHorizons\InvSee\player\InvSeePlayerList;
+use muqsit\invmenu\InvMenuHandler;
 use pocketmine\plugin\PluginBase;
 
-class Loader extends PluginBase{
+final class Loader extends PluginBase{
 
-	/** @var InventoryHandler */
-	private $handler;
+	/** @var InvSeePlayerList */
+	private $player_list;
 
-	public function onEnable() : void{
-		$this->handler = new InventoryHandler($this);
-		BaseCommand::registerDefaults($this);
-		$this->getServer()->getPluginManager()->registerEvents(new EventListener($this), $this);
+	protected function onLoad() : void{
+		$this->player_list = new InvSeePlayerList();
 	}
 
-	public function getInventoryHandler() : InventoryHandler{
-		return $this->handler;
+	protected function onEnable() : void{
+		$this->initVirions();
+		$this->player_list->init($this);
+		$this->getServer()->getCommandMap()->registerAll($this->getName(), [
+			new EnderInvSeeCommand($this, "enderinvsee"),
+			new InvSeeCommand($this, "invsee")
+		]);
+	}
+
+	protected function onDisable() : void{
+		$this->player_list->close();
+	}
+
+	private function initVirions() : void{
+		if(!InvMenuHandler::isRegistered()){
+			InvMenuHandler::register($this);
+		}
+	}
+
+	public function getPlayerList() : InvSeePlayerList{
+		return $this->player_list;
 	}
 }

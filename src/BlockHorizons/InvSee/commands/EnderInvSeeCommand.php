@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace BlockHorizons\InvSee\commands;
 
+use BlockHorizons\InvSee\Loader;
 use InvalidArgumentException;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
 class EnderInvSeeCommand extends BaseCommand{
+
+	public function __construct(Loader $loader, string $label, array $aliases = []){
+		parent::__construct($loader, $label, "View a player's ender inventory.", "/{$label} <player>", $aliases);
+	}
 
 	protected function initCommand() : void{
 		$this->setFlag(self::FLAG_DENY_CONSOLE);
@@ -34,7 +39,7 @@ class EnderInvSeeCommand extends BaseCommand{
 		}
 
 		try{
-			$player = $this->getLoader()->getInventoryHandler()->get($args[0]);
+			$player = $this->getLoader()->getPlayerList()->getOrCreate($args[0]);
 		}catch(InvalidArgumentException $e){
 			$sender->sendMessage(TextFormat::RED . $e->getMessage());
 			return true;
