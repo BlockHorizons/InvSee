@@ -66,7 +66,7 @@ class InvSeePlayerList{
 	}
 
 	public function onPlayerJoin(Player $player) : void{
-		$this->joined[$name = strtolower($player->getName())] = $player->getUniqueId()->toBinary();
+		$this->joined[$name = strtolower($player->getName())] = $player->getUniqueId()->getBytes();
 		if(isset($this->players[$name])){
 			$this->players[$name]->onPlayerOnline($player);
 		}
