@@ -11,8 +11,7 @@ use pocketmine\event\player\PlayerQuitEvent;
 
 class InvSeePlayerListEventListener implements Listener{
 
-	/** @var InvSeePlayerList */
-	protected $player_list;
+	protected InvSeePlayerList $player_list;
 
 	public function __construct(Loader $loader){
 		$this->player_list = $loader->getPlayerList();

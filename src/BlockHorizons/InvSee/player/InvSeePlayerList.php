@@ -15,20 +15,15 @@ use PrefixedLogger;
 
 class InvSeePlayerList{
 
-	/** @var Server */
-	protected $server;
-
-	/** @var TaskScheduler */
-	protected $scheduler;
-
-	/** @var Logger */
-	protected $logger;
+	protected Server $server;
+	protected TaskScheduler $scheduler;
+	protected Logger $logger;
 
 	/** @var InvSeePlayer[] */
-	protected $players = []; // these are NOT online players, these are players whose inventories are being spied upon
+	protected array $players = []; // these are NOT online players, these are players whose inventories are being spied upon
 
 	/** @var string[] */
-	protected $joined = [];
+	protected array $joined = [];
 
 	public function __construct(){
 	}

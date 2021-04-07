@@ -17,11 +17,8 @@ abstract class BaseCommand extends Command implements PluginOwned{
 
 	protected const FLAG_DENY_CONSOLE = 0b10000000000000;
 
-	/** @var Loader */
-	protected $loader;
-
-	/** @var int */
-	protected $flags = 0;
+	protected Loader $loader;
+	protected int $flags = 0;
 
 	public function __construct(Loader $loader, string $name, string $description = "", string $usageMessage = "", array $aliases = []){
 		parent::__construct($name, $description, $usageMessage, $aliases);

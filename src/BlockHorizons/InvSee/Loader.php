@@ -12,8 +12,7 @@ use pocketmine\plugin\PluginBase;
 
 final class Loader extends PluginBase{
 
-	/** @var InvSeePlayerList */
-	private $player_list;
+	private InvSeePlayerList $player_list;
 
 	protected function onLoad() : void{
 		$this->player_list = new InvSeePlayerList();

@@ -31,20 +31,11 @@ class InvSeePlayer{
 		$inv_menu->setInventoryCloseListener(null);
 	}
 
-	/** @var string */
-	protected $player;
-
-	/** @var Logger */
-	protected $logger;
-
-	/** @var InvSeePlayerHandler */
-	private $handler;
-
-	/** @var InvMenu */
-	protected $inventory_menu;
-
-	/** @var InvMenu */
-	protected $ender_inventory_menu;
+	protected string $player;
+	protected Logger $logger;
+	private InvSeePlayerHandler $handler;
+	protected InvMenu $inventory_menu;
+	protected InvMenu $ender_inventory_menu;
 
 	public function __construct(string $player, Logger $logger){
 		$this->player = $player;
