@@ -9,7 +9,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 
-class InvSeePlayerListEventListener implements Listener{
+final class InvSeePlayerListEventListener implements Listener{
 
 	protected InvSeePlayerList $player_list;
 

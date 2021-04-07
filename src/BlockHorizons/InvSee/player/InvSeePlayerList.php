@@ -13,17 +13,17 @@ use pocketmine\scheduler\TaskScheduler;
 use pocketmine\Server;
 use PrefixedLogger;
 
-class InvSeePlayerList{
+final class InvSeePlayerList{
 
-	protected Server $server;
-	protected TaskScheduler $scheduler;
-	protected Logger $logger;
+	private Server $server;
+	private TaskScheduler $scheduler;
+	private Logger $logger;
 
 	/** @var InvSeePlayer[] */
-	protected array $players = []; // these are NOT online players, these are players whose inventories are being spied upon
+	private array $players = []; // these are NOT online players, these are players whose inventories are being spied upon
 
 	/** @var string[] */
-	protected array $joined = [];
+	private array $joined = [];
 
 	public function __construct(){
 	}
@@ -32,7 +32,7 @@ class InvSeePlayerList{
 		$this->server = $loader->getServer();
 		$this->scheduler = $loader->getScheduler();
 		$this->logger = $loader->getLogger();
-		$loader->getServer()->getPluginManager()->registerEvents(new InvSeePlayerListEventListener($loader), $loader);
+		$this->server->getPluginManager()->registerEvents(new InvSeePlayerListEventListener($loader), $loader);
 	}
 
 	public function get(string $player) : ?InvSeePlayer{
@@ -57,7 +57,7 @@ class InvSeePlayerList{
 	}
 
 	public function getOnlinePlayer(string $name) : ?Player{
-		return isset($this->joined[$name = strtolower($name)]) ? Server::getInstance()->getPlayerByRawUUID($this->joined[$name]) : null;
+		return isset($this->joined[$name = strtolower($name)]) ? $this->server->getPlayerByRawUUID($this->joined[$name]) : null;
 	}
 
 	public function onPlayerJoin(Player $player) : void{

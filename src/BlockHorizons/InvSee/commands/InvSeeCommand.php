@@ -10,7 +10,7 @@ use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
-class InvSeeCommand extends BaseCommand{
+final class InvSeeCommand extends BaseCommand{
 
 	public function __construct(Loader $loader, string $label, array $aliases = []){
 		parent::__construct($loader, $label, "View a player's inventory.", "/{$label} <player>", $aliases);

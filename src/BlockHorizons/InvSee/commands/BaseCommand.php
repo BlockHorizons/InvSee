@@ -17,8 +17,8 @@ abstract class BaseCommand extends Command implements PluginOwned{
 
 	protected const FLAG_DENY_CONSOLE = 0b10000000000000;
 
-	protected Loader $loader;
-	protected int $flags = 0;
+	private Loader $loader;
+	private int $flags = 0;
 
 	public function __construct(Loader $loader, string $name, string $description = "", string $usageMessage = "", array $aliases = []){
 		parent::__construct($name, $description, $usageMessage, $aliases);
@@ -30,14 +30,11 @@ abstract class BaseCommand extends Command implements PluginOwned{
 	protected function initCommand() : void{
 	}
 
-	/**
-	 * @return Loader
-	 */
-	public function getLoader() : Loader{
+	final public function getLoader() : Loader{
 		return $this->loader;
 	}
 
-	public function getOwningPlugin() : Plugin{
+	final public function getOwningPlugin() : Plugin{
 		return $this->loader;
 	}
 
@@ -87,27 +84,17 @@ abstract class BaseCommand extends Command implements PluginOwned{
 	 */
 	abstract public function onCommand(CommandSender $sender, string $commandLabel, array $args) : bool;
 
-	/**
-	 * @param int $flag
-	 */
-	protected function setFlag(int $flag) : void{
+	final protected function setFlag(int $flag) : void{
 		if(!$this->isFlagSet($flag)){
 			$this->flags |= $flag;
 		}
 	}
 
-	/**
-	 * @param int $flag
-	 * @return bool
-	 */
-	protected function isFlagSet(int $flag) : bool{
+	final protected function isFlagSet(int $flag) : bool{
 		return ($this->flags & $flag) === $flag;
 	}
 
-	/**
-	 * @param int $flag
-	 */
-	protected function removeFlag(int $flag) : void{
+	final protected function removeFlag(int $flag) : void{
 		if($this->isFlagSet($flag)){
 			$this->flags &= ~$flag;
 		}

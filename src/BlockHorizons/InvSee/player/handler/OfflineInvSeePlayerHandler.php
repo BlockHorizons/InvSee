@@ -11,7 +11,7 @@ use pocketmine\nbt\tag\ListTag;
 use pocketmine\Server;
 use RuntimeException;
 
-class OfflineInvSeePlayerHandler implements InvSeePlayerHandler{
+final class OfflineInvSeePlayerHandler implements InvSeePlayerHandler{
 
 	public function init(InvSeePlayer $player) : void{
 	}

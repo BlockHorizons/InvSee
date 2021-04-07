@@ -8,7 +8,7 @@ use BlockHorizons\InvSee\utils\InvCombiner;
 use pocketmine\inventory\Inventory;
 use pocketmine\item\Item;
 
-class PlayerArmorInventoryListener implements InvSeeListener{
+final class PlayerArmorInventoryListener implements InvSeeListener{
 
 	protected Inventory $inventory;
 

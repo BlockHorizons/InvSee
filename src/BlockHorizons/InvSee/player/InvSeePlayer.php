@@ -19,7 +19,7 @@ use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\player\Player;
 use pocketmine\Server;
 
-class InvSeePlayer{
+final class InvSeePlayer{
 
 	private static function destroyInvMenu(InvMenu $inv_menu) : void{
 		foreach($inv_menu->getInventory()->getViewers() as $viewer){

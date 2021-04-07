@@ -7,7 +7,7 @@ namespace BlockHorizons\InvSee\listeners;
 use pocketmine\inventory\Inventory;
 use pocketmine\item\Item;
 
-class PlayerInventoryListener implements InvSeeListener{
+final class PlayerInventoryListener implements InvSeeListener{
 
 	protected Inventory $inventory;
 

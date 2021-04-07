@@ -15,7 +15,7 @@ use InvalidStateException;
 use pocketmine\inventory\Inventory;
 use pocketmine\player\Player;
 
-class OnlineInvSeePlayerHandler implements InvSeePlayerHandler{
+final class OnlineInvSeePlayerHandler implements InvSeePlayerHandler{
 
 	private ?Player $player;
 
