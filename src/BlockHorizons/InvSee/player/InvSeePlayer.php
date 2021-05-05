@@ -112,7 +112,7 @@ final class InvSeePlayer{
 		$player = $list->getOnlinePlayer($this->player);
 		if($player !== null){
 			$inventory = $player->getInventory()->getContents();
-			$ender_inventory = $player->getEnderChestInventory()->getContents();
+			$ender_inventory = $player->getEnderInventory()->getContents();
 			$armor_inventory = $player->getArmorInventory()->getContents();
 		}else{
 			$inventory = [];

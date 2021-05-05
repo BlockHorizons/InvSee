@@ -35,17 +35,17 @@ final class OnlineInvSeePlayerHandler implements InvSeePlayerHandler{
 		InvCombiner::split($player->getInventoryMenu()->getInventory()->getContents(), $inventory, $armor_inventory);
 		$this->player->getInventory()->setContents($inventory);
 		$this->player->getArmorInventory()->setContents($armor_inventory);
-		$this->player->getEnderChestInventory()->setContents($player->getEnderChestInventoryMenu()->getInventory()->getContents());
+		$this->player->getEnderInventory()->setContents($player->getEnderChestInventoryMenu()->getInventory()->getContents());
 
 		$this->player->getInventory()->getListeners()->add(new PlayerInventoryListener($player->getInventoryMenu()->getInventory()));
 		$this->player->getArmorInventory()->getListeners()->add(new PlayerArmorInventoryListener($player->getInventoryMenu()->getInventory()));
-		$this->player->getEnderChestInventory()->getListeners()->add(new PlayerEnderInventoryListener($player->getEnderChestInventoryMenu()->getInventory()));
+		$this->player->getEnderInventory()->getListeners()->add(new PlayerEnderInventoryListener($player->getEnderChestInventoryMenu()->getInventory()));
 
 		$player->getInventoryMenu()->getInventory()->getListeners()->add(
 			new PlayerInventoryListener($this->player->getInventory()),
 			new InvSeeArmorInventoryListener($this->player->getArmorInventory())
 		);
-		$player->getEnderChestInventoryMenu()->getInventory()->getListeners()->add(new PlayerEnderInventoryListener($this->player->getEnderChestInventory()));
+		$player->getEnderChestInventoryMenu()->getInventory()->getListeners()->add(new PlayerEnderInventoryListener($this->player->getEnderInventory()));
 	}
 
 	public function destroy(InvSeePlayer $player) : void{
@@ -59,7 +59,7 @@ final class OnlineInvSeePlayerHandler implements InvSeePlayerHandler{
 		foreach([
 			$this->player->getInventory(),
 			$this->player->getArmorInventory(),
-			$this->player->getEnderChestInventory(),
+			$this->player->getEnderInventory(),
 			$player->getInventoryMenu()->getInventory(),
 			$player->getEnderChestInventoryMenu()->getInventory()
 		] as $inventory){

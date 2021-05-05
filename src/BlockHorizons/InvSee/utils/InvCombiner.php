@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace BlockHorizons\InvSee\utils;
 
+use pocketmine\block\utils\DyeColor;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\item\Item;
 use pocketmine\utils\TextFormat;
@@ -63,7 +64,7 @@ final class InvCombiner{
 	 * @param array<int, Item> $inventory
 	 */
 	private static function decorate(array &$inventory) : void{
-		$glass_pane = VanillaBlocks::BLACK_STAINED_GLASS_PANE();
+		$glass_pane = VanillaBlocks::STAINED_GLASS_PANE()->setColor(DyeColor::BLACK());
 		$inventory[45] = $inventory[53] = $glass_pane->asItem()->setCustomName("");
 		$inventory[46] = $glass_pane->asItem()->setCustomName(TextFormat::RESET . TextFormat::AQUA . "Helmet ->");
 		$inventory[49] = $glass_pane->asItem()->setCustomName(TextFormat::RESET . TextFormat::AQUA . "<- Chestplate | Leggings ->");
