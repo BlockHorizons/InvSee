@@ -7,7 +7,7 @@ namespace BlockHorizons\InvSee\commands;
 use BlockHorizons\InvSee\Loader;
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\command\ConsoleCommandSender;
+use pocketmine\console\ConsoleCommandSender;
 use pocketmine\command\utils\InvalidCommandSyntaxException;
 use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginOwned;

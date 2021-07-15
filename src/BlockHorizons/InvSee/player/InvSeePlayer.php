@@ -10,12 +10,12 @@ use BlockHorizons\InvSee\player\handler\NullInvSeePlayerHandler;
 use BlockHorizons\InvSee\player\handler\OfflineInvSeePlayerHandler;
 use BlockHorizons\InvSee\player\handler\OnlineInvSeePlayerHandler;
 use BlockHorizons\InvSee\utils\InvCombiner;
+use BlockHorizons\InvSee\utils\OfflinePlayerInventory;
+use InvalidArgumentException;
 use Logger;
 use muqsit\invmenu\InvMenu;
 use muqsit\invmenu\transaction\InvMenuTransaction;
 use muqsit\invmenu\transaction\InvMenuTransactionResult;
-use pocketmine\item\Item;
-use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\player\Player;
 use pocketmine\Server;
 
@@ -115,37 +115,15 @@ final class InvSeePlayer{
 			$ender_inventory = $player->getEnderInventory()->getContents();
 			$armor_inventory = $player->getArmorInventory()->getContents();
 		}else{
-			$inventory = [];
-			$ender_inventory = [];
-			$armor_inventory = [];
-
 			$nbt = Server::getInstance()->getOfflinePlayerData($this->player);
 			if($nbt === null){
-				throw new \InvalidArgumentException("Could not find player data of \"" . $this->player . "\"");
+				throw new InvalidArgumentException("Could not find player data of \"" . $this->player . "\"");
 			}
 
-			$inventoryTag = $nbt->getListTag("Inventory");
-			if($inventoryTag !== null){
-				/** @var CompoundTag $item */
-				foreach($inventoryTag->getIterator() as $i => $item){
-					$slot = $item->getByte("Slot");
-					if($slot >= 0 && $slot < 9){
-						// old hotbar stuff
-					}elseif($slot >= 100 && $slot < 104){
-						$armor_inventory[$slot - 100] = Item::nbtDeserialize($item);
-					}else{
-						$inventory[$slot - 9] = Item::nbtDeserialize($item);
-					}
-				}
-
-				$enderChestInventoryTag = $nbt->getListTag("EnderChestInventory");
-				if($enderChestInventoryTag !== null){
-					/** @var CompoundTag $item */
-					foreach($enderChestInventoryTag->getIterator() as $i => $item){
-						$ender_inventory[$item->getByte("Slot")] = Item::nbtDeserialize($item);
-					}
-				}
-			}
+			$offline_player_inventory = OfflinePlayerInventory::fromOfflinePlayerData($nbt);
+			$inventory = $offline_player_inventory->readInventory();
+			$ender_inventory = $offline_player_inventory->readEnderInventory();
+			$armor_inventory = $offline_player_inventory->readArmorInventory();
 		}
 
 		$this->inventory_menu->getInventory()->setContents(InvCombiner::combine($inventory, $armor_inventory));
