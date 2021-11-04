@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace BlockHorizons\InvSee\player;
 
 use BlockHorizons\InvSee\Loader;
-use InvalidStateException;
+use InvalidArgumentException;
 use Logger;
 use pocketmine\player\Player;
 use pocketmine\scheduler\ClosureTask;
@@ -45,7 +45,7 @@ final class InvSeePlayerList{
 
 	private function create(string $player) : InvSeePlayer{
 		if(isset($this->players[$name = strtolower($player)])){
-			throw new InvalidStateException("Attempted to create a duplicate player");
+			throw new InvalidArgumentException("Attempted to create a duplicate player");
 		}
 
 		$this->logger->debug("Creating session: {$name}");

@@ -11,7 +11,7 @@ use BlockHorizons\InvSee\listeners\PlayerEnderInventoryListener;
 use BlockHorizons\InvSee\listeners\PlayerInventoryListener;
 use BlockHorizons\InvSee\player\InvSeePlayer;
 use BlockHorizons\InvSee\utils\InvCombiner;
-use InvalidStateException;
+use LogicException;
 use pocketmine\inventory\Inventory;
 use pocketmine\player\Player;
 
@@ -25,7 +25,7 @@ final class OnlineInvSeePlayerHandler implements InvSeePlayerHandler{
 
 	public function init(InvSeePlayer $player) : void{
 		if($this->player === null){
-			throw new InvalidStateException("Tried to initialize in an un-constructed or an already-destroyed state");
+			throw new LogicException("Tried to initialize in an un-constructed or an already-destroyed state");
 		}
 
 		$player->getLogger()->debug("Initializing online player instance: {$this->player->getName()}");
@@ -50,7 +50,7 @@ final class OnlineInvSeePlayerHandler implements InvSeePlayerHandler{
 
 	public function destroy(InvSeePlayer $player) : void{
 		if($this->player === null){
-			throw new InvalidStateException("Tried to destroy in an un-constructed or an already-destroyed state");
+			throw new LogicException("Tried to destroy in an un-constructed or an already-destroyed state");
 		}
 
 		$player->getLogger()->debug("Destroying online player instance: {$this->player->getName()}");
