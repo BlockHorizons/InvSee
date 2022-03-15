@@ -10,7 +10,7 @@ use pocketmine\item\Item;
 
 final class InvSeeArmorInventoryListener implements InvSeeListener{
 
-	protected Inventory $inventory;
+	private Inventory $inventory;
 
 	public function __construct(Inventory $inventory){
 		$this->inventory = $inventory;

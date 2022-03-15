@@ -9,7 +9,7 @@ use pocketmine\item\Item;
 
 final class PlayerEnderInventoryListener implements InvSeeListener{
 
-	protected Inventory $inventory;
+	private Inventory $inventory;
 
 	public function __construct(Inventory $inventory){
 		$this->inventory = $inventory;
