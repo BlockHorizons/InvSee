@@ -21,10 +21,6 @@ final class PlayerArmorInventoryListener implements InvSeeListener{
 			$this->inventory->setItem($menu_slot, $inventory->getItem($armor_slot));
 		}
 		$this->inventory->getListeners()->add(...$listeners);
-
-		foreach($this->inventory->getViewers() as $viewer){
-			$viewer->getNetworkSession()->getInvManager()->syncContents($this->inventory);
-		}
 	}
 
 	public function onSlotChange(Inventory $inventory, int $slot, Item $old_item) : void{

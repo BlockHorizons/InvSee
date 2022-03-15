@@ -22,10 +22,6 @@ final class PlayerInventoryListener implements InvSeeListener{
 			}
 		}
 		$this->inventory->getListeners()->add(...$listeners);
-
-		foreach($this->inventory->getViewers() as $viewer){
-			$viewer->getNetworkSession()->getInvManager()->syncContents($this->inventory);
-		}
 	}
 
 	public function onSlotChange(Inventory $inventory, int $slot, Item $old_item) : void{
