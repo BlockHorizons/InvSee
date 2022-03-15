@@ -9,11 +9,9 @@ use pocketmine\item\Item;
 
 final class PlayerInventoryListener implements InvSeeListener{
 
-	protected Inventory $inventory;
-
-	public function __construct(Inventory $inventory){
-		$this->inventory = $inventory;
-	}
+	public function __construct(
+		private Inventory $inventory
+	){}
 
 	public function onContentChange(Inventory $inventory, array $old_contents) : void{
 		$listeners = InvSeeListeners::find($this->inventory->getListeners()->toArray());

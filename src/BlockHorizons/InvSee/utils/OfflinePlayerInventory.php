@@ -15,11 +15,9 @@ final class OfflinePlayerInventory{
 		return new self($data);
 	}
 
-	private CompoundTag $data;
-
-	public function __construct(CompoundTag $data){
-		$this->data = $data;
-	}
+	public function __construct(
+		private CompoundTag $data
+	){}
 
 	public function getOfflinePlayerData() : CompoundTag{
 		return $this->data;

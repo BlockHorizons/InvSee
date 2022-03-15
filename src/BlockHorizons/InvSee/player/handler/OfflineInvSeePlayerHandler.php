@@ -20,11 +20,7 @@ final class OfflineInvSeePlayerHandler implements InvSeePlayerHandler{
 		InvCombiner::split($player->getInventoryMenu()->getInventory()->getContents(), $inventory, $armor_inventory);
 
 		$server = Server::getInstance();
-		$nbt = $server->getOfflinePlayerData($player->getPlayer());
-		if($nbt === null){
-			throw new RuntimeException("Failed to save player data - could not fetch player data");
-		}
-
+		$nbt = $server->getOfflinePlayerData($player->getPlayer()) ?? throw new RuntimeException("Failed to save player data - could not fetch player data");
 		$server->saveOfflinePlayerData($player->getPlayer(), OfflinePlayerInventory::fromOfflinePlayerData($nbt)
 			->writeInventory($inventory)
 			->writeArmorInventory($armor_inventory)

@@ -17,11 +17,9 @@ use pocketmine\player\Player;
 
 final class OnlineInvSeePlayerHandler implements InvSeePlayerHandler{
 
-	private ?Player $player;
-
-	public function __construct(Player $player){
-		$this->player = $player;
-	}
+	public function __construct(
+		private ?Player $player
+	){}
 
 	public function init(InvSeePlayer $player) : void{
 		if($this->player === null){

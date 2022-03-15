@@ -31,15 +31,14 @@ final class InvSeePlayer{
 		$inv_menu->setInventoryCloseListener(null);
 	}
 
-	private string $player;
-	private Logger $logger;
 	private InvSeePlayerHandler $handler;
 	private InvMenu $inventory_menu;
 	private InvMenu $ender_inventory_menu;
 
-	public function __construct(string $player, Logger $logger){
-		$this->player = $player;
-		$this->logger = $logger;
+	public function __construct(
+		private string $player,
+		private Logger $logger
+	){
 		$this->handler = NullInvSeePlayerHandler::instance();
 		$this->inventory_menu = InvMenu::create(InvMenu::TYPE_DOUBLE_CHEST);
 		$this->ender_inventory_menu = InvMenu::create(InvMenu::TYPE_CHEST);
@@ -115,11 +114,7 @@ final class InvSeePlayer{
 			$ender_inventory = $player->getEnderInventory()->getContents();
 			$armor_inventory = $player->getArmorInventory()->getContents();
 		}else{
-			$nbt = Server::getInstance()->getOfflinePlayerData($this->player);
-			if($nbt === null){
-				throw new InvalidArgumentException("Could not find player data of \"" . $this->player . "\"");
-			}
-
+			$nbt = Server::getInstance()->getOfflinePlayerData($this->player) ?? throw new InvalidArgumentException("Could not find player data of \"" . $this->player . "\"");
 			$offline_player_inventory = OfflinePlayerInventory::fromOfflinePlayerData($nbt);
 			$inventory = $offline_player_inventory->readInventory();
 			$ender_inventory = $offline_player_inventory->readEnderInventory();
