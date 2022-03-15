@@ -3,7 +3,20 @@ author: BlockHorizons
 main: BlockHorizons\InvSee\Loader
 api: 4.0.0
 version: 2.0.1
+commands:
+  invsee:
+    description: View a player's inventory
+    usage: /invsee <player>
+    permission: invsee.command.invsee
+  enderinvsee:
+    description: View a player's ender inventory
+    usage: /enderinvsee <player>
+    permission: invsee.command.enderinvsee
 permissions:
+  invsee.command.invsee:
+    default: true
+  invsee.command.enderinvsee:
+    default: true
   invsee.inventory.view:
     default: op
     description: "Allows viewing a player's inventory."

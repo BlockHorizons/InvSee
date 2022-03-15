@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace BlockHorizons\InvSee;
 
-use BlockHorizons\InvSee\commands\EnderInvSeeCommand;
-use BlockHorizons\InvSee\commands\InvSeeCommand;
+use BlockHorizons\InvSee\commands\EnderInvSeeCommandExecutor;
+use BlockHorizons\InvSee\commands\InvSeeCommandExecutor;
 use BlockHorizons\InvSee\player\InvSeePlayerList;
 use muqsit\invmenu\InvMenuHandler;
+use pocketmine\command\PluginCommand;
 use pocketmine\plugin\PluginBase;
+use RuntimeException;
 
 final class Loader extends PluginBase{
 
@@ -21,10 +23,20 @@ final class Loader extends PluginBase{
 	protected function onEnable() : void{
 		$this->initVirions();
 		$this->player_list->init($this);
-		$this->getServer()->getCommandMap()->registerAll($this->getName(), [
-			new EnderInvSeeCommand($this, "enderinvsee"),
-			new InvSeeCommand($this, "invsee")
-		]);
+
+		$command_map = $this->getServer()->getCommandMap();
+
+		$command = $command_map->getCommand("invsee");
+		if(!($command instanceof PluginCommand)){
+			throw new RuntimeException("Command \"invsee\" is not registered");
+		}
+		$command->setExecutor(new InvSeeCommandExecutor($this->player_list));
+
+		$command = $command_map->getCommand("enderinvsee");
+		if(!($command instanceof PluginCommand)){
+			throw new RuntimeException("Command \"enderinvsee\" is not registered");
+		}
+		$command->setExecutor(new EnderInvSeeCommandExecutor($this->player_list));
 	}
 
 	protected function onDisable() : void{

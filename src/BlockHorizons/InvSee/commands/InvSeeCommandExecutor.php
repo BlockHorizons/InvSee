@@ -4,30 +4,28 @@ declare(strict_types=1);
 
 namespace BlockHorizons\InvSee\commands;
 
-use BlockHorizons\InvSee\Loader;
+use BlockHorizons\InvSee\player\InvSeePlayerList;
 use InvalidArgumentException;
+use pocketmine\command\Command;
+use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
-final class InvSeeCommand extends BaseCommand{
+final class InvSeeCommandExecutor implements CommandExecutor{
 
-	public function __construct(Loader $loader, string $label, array $aliases = []){
-		parent::__construct($loader, $label, "View a player's inventory.", "/{$label} <player>", $aliases);
-	}
+	public function __construct(
+		private InvSeePlayerList $player_list
+	){}
 
-	protected function initCommand() : void{
-		$this->setFlag(self::FLAG_DENY_CONSOLE);
-	}
-
-	public function onCommand(CommandSender $sender, string $commandLabel, array $args) : bool{
-		if(!isset($args[0])){
-			return false;
-		}
-
+	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
 		if(!($sender instanceof Player)){
 			$sender->sendMessage(TextFormat::RED . "This command can only be used as a player.");
 			return true;
+		}
+
+		if(!isset($args[0])){
+			return false;
 		}
 
 		if(
@@ -39,7 +37,7 @@ final class InvSeeCommand extends BaseCommand{
 		}
 
 		try{
-			$player = $this->getLoader()->getPlayerList()->getOrCreate($args[0]);
+			$player = $this->player_list->getOrCreate($args[0]);
 		}catch(InvalidArgumentException $e){
 			$sender->sendMessage(TextFormat::RED . $e->getMessage());
 			return true;
