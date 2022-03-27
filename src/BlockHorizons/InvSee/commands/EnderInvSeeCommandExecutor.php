@@ -14,9 +14,27 @@ use pocketmine\utils\TextFormat;
 
 final class EnderInvSeeCommandExecutor implements CommandExecutor{
 
+	private InvViewPermissionChecker $view_permission_checker;
+
 	public function __construct(
 		private InvSeePlayerList $player_list
-	){}
+	){
+		$this->view_permission_checker = new InvViewPermissionChecker();
+		$this->getViewPermissionChecker()->register(static function(Player $player, string $viewing) : ?bool{
+			if(
+				!$player->hasPermission("invsee.enderinventory.view") &&
+				(strtolower($viewing) !== strtolower($player->getName()) || !$player->hasPermission("invsee.enderinventory.view.self"))
+			){
+				$player->sendMessage(TextFormat::RED . "You don't have permission to view this inventory.");
+				return false;
+			}
+			return true;
+		}, 0);
+	}
+
+	public function getViewPermissionChecker() : InvViewPermissionChecker{
+		return $this->view_permission_checker;
+	}
 
 	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
 		if(!($sender instanceof Player)){
@@ -28,12 +46,10 @@ final class EnderInvSeeCommandExecutor implements CommandExecutor{
 			return false;
 		}
 
-		if(
-			!$sender->hasPermission("invsee.enderinventory.view") &&
-			(strtolower($args[0]) !== strtolower($sender->getName()) || !$sender->hasPermission("invsee.enderinventory.view.self"))
-		){
-			$sender->sendMessage(TextFormat::RED . "You don't have permission to view this inventory.");
-			return true;
+		foreach($this->getViewPermissionChecker()->getAll() as $checker){
+			if(!$checker($sender, $args[0])){
+				return true;
+			}
 		}
 
 		try{

@@ -6,6 +6,7 @@ namespace BlockHorizons\InvSee;
 
 use BlockHorizons\InvSee\commands\EnderInvSeeCommandExecutor;
 use BlockHorizons\InvSee\commands\InvSeeCommandExecutor;
+use BlockHorizons\InvSee\module\ModuleManager;
 use BlockHorizons\InvSee\player\InvSeePlayerList;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\command\PluginCommand;
@@ -15,6 +16,7 @@ use RuntimeException;
 final class Loader extends PluginBase{
 
 	private InvSeePlayerList $player_list;
+	private ModuleManager $module_manager;
 
 	protected function onLoad() : void{
 		$this->player_list = new InvSeePlayerList();
@@ -37,6 +39,9 @@ final class Loader extends PluginBase{
 			throw new RuntimeException("Command \"enderinvsee\" is not registered");
 		}
 		$command->setExecutor(new EnderInvSeeCommandExecutor($this->player_list));
+
+		$this->module_manager = new ModuleManager($this);
+		$this->module_manager->init();
 	}
 
 	protected function onDisable() : void{
@@ -51,5 +56,9 @@ final class Loader extends PluginBase{
 
 	public function getPlayerList() : InvSeePlayerList{
 		return $this->player_list;
+	}
+
+	public function getModuleManager() : ModuleManager{
+		return $this->module_manager;
 	}
 }
