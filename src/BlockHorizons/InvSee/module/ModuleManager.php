@@ -43,6 +43,8 @@ final class ModuleManager{
 		$this->loader->saveResource("modules.yml");
 		$this->config = new Config($this->loader->getDataFolder() . "modules.yml");
 		$this->logger = new PrefixedLogger($this->loader->getLogger(), "Module Manager");
+
+		// TODO: A command to manage all modules - modules can be enabled and disabled dynamically
 	}
 
 	public function init() : void{
