@@ -6,7 +6,7 @@ module-states:
   # See: https://github.com/BlockHorizons/InvSee/issues/10
   invsee-by-request: enabled
 
-# Configurables for InvSee By Request
+# Configurables for InvSee by Request
 invsee-by-request:
   # Command run by the requester to request a player to grant viewing access.
   # "permission.access" must be one of:
@@ -24,7 +24,11 @@ invsee-by-request:
     permission:
       name: "invsee.command.invseegrant"
       access: everyone
+  # Timeout in seconds after which the requester's request expires.
+  # For there to be no timeout limit, set the timeout to infinity like so:
+  #   request-timeout: .inf
+  request-timeout: 15
   # Timeout in seconds after which the requester can no longer view the granter's inventory.
   # For there to be no timeout limit, set the timeout to infinity like so:
-  #   timeout: .inf
-  timeout: 30
+  #   grant-timeout: .inf
+  grant-timeout: 30

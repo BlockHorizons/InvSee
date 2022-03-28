@@ -43,7 +43,8 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 			$configuration["grant-command"]["name"],
 			$configuration["grant-command"]["permission"]["name"],
 			$configuration["grant-command"]["permission"]["access"],
-			$configuration["timeout"]
+			$configuration["request-timeout"],
+			$configuration["grant-timeout"]
 		);
 	}
 
@@ -80,13 +81,17 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 		private string $grant_command_name,
 		private string $grant_command_permission,
 		private string $grant_command_permission_accessibility,
-		private float $timeout
+		private float $request_timeout,
+		private float $grant_timeout
 	){
 		if($this->request_command_name === $this->grant_command_name){
 			throw new InvalidArgumentException("Request command name and grant command name must not be the same");
 		}
-		if($this->timeout < 0.0){
-			throw new RuntimeException("Timeout cannot be less than 0.0");
+		if($this->request_timeout < 0.0){
+			throw new InvalidArgumentException("Request timeout cannot be less than 0.0");
+		}
+		if($this->grant_timeout < 0.0){
+			throw new InvalidArgumentException("Grant timeout cannot be less than 0.0");
 		}
 	}
 
@@ -142,11 +147,11 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 		$this->revokePlayerPermission($player);
 
 		$server = Server::getInstance();
-		$until = $server->getTick() + ((int) ceil($this->timeout * 20));
+		$until = $server->getTick() + ((int) ceil($this->grant_timeout * 20));
 		$this->access_player_expiry[$uuid = $player->getUniqueId()->getBytes()] = $until;
 		$this->access_expiry_player_viewing[$until][$uuid] = strtolower($viewing->getName());
 
-		if(is_infinite($this->timeout) || $this->revoker !== null){
+		if(is_infinite($this->grant_timeout) || $this->revoker !== null){
 			return;
 		}
 
@@ -264,7 +269,7 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 					return true;
 				}
 
-				if(isset($this->requests[$player->getId()][$sender->getId()])){
+				if(isset($this->requests[$player->getId()][$sender->getId()]) && hrtime(true) - $this->requests[$player->getId()][$sender->getId()] < $this->request_timeout * 1_000_000_000){
 					$sender->sendMessage(TextFormat::RED . "You have already requested {$player->getName()} for view access.");
 					return true;
 				}
@@ -301,7 +306,7 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 					unset($this->requests[$sender->getId()]);
 				}
 
-				if($time_diff > 15_000_000_000){
+				if($time_diff > $this->request_timeout * 1_000_000_000){
 					$sender->sendMessage(TextFormat::RED . "{$player->getName()}'s request has expired.");
 					return true;
 				}
