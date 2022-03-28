@@ -26,15 +26,13 @@ final class Loader extends PluginBase{
 		$this->initVirions();
 		$this->player_list->init($this);
 
-		$command_map = $this->getServer()->getCommandMap();
-
-		$command = $command_map->getCommand("invsee");
+		$command = $this->getCommand("invsee");
 		if(!($command instanceof PluginCommand)){
 			throw new RuntimeException("Command \"invsee\" is not registered");
 		}
 		$command->setExecutor(new InvSeeCommandExecutor($this->player_list));
 
-		$command = $command_map->getCommand("enderinvsee");
+		$command = $this->getCommand("enderinvsee");
 		if(!($command instanceof PluginCommand)){
 			throw new RuntimeException("Command \"enderinvsee\" is not registered");
 		}
