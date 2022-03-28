@@ -5,6 +5,7 @@ branches:
 projects:
   InvSee:
     path: ""
+    icon: icon.png
     libs:
       - src: muqsit/InvMenu/InvMenu
         version: ^4.3.2
