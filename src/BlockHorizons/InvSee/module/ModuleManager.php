@@ -50,7 +50,7 @@ final class ModuleManager{
 	public function init() : void{
 		foreach($this->config->get("module-states") as $identifier => $state){
 			if($state === "enabled"){
-				$this->enable($this->getModule($identifier));
+				$this->enable($this->get($identifier));
 			}elseif($state !== "disabled"){
 				throw new RuntimeException("State must be either \"enabled\" or \"disabled\", got \"{$state}\" for module {$identifier}");
 			}
@@ -65,11 +65,11 @@ final class ModuleManager{
 		$this->modules[$info->identifier] = $info;
 	}
 
-	public function getModule(string $identifier) : ModuleInfo{
+	public function get(string $identifier) : ModuleInfo{
 		return $this->modules[$identifier];
 	}
 
-	public function getModuleNullable(string $identifier) : ?ModuleInfo{
+	public function getNullable(string $identifier) : ?ModuleInfo{
 		return $this->modules[$identifier] ?? null;
 	}
 
@@ -78,7 +78,7 @@ final class ModuleManager{
 	 *
 	 * @phpstan-return array<string, ModuleInfo>
 	 */
-	public function getModules() : array{
+	public function getAll() : array{
 		return $this->modules;
 	}
 
