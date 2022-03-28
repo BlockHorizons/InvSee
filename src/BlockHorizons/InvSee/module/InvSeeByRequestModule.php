@@ -230,6 +230,13 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 	}
 
 	public function onDisable(Loader $loader) : void{
+		$server = $loader->getServer();
+		foreach($this->access_player_expiry as $id => $_){
+			$player = $server->getPlayerByRawUUID($id);
+			assert($player !== null);
+			$this->revokePlayerPermission($player);
+		}
+
 		$permission_manager = PermissionManager::getInstance();
 		$permission_manager->removePermission($permission_manager->getPermission($this->request_command_permission) ?? throw new RuntimeException("Cannot retrieve permission: {$this->request_command_permission}"));
 		$permission_manager->removePermission($permission_manager->getPermission($this->grant_command_permission) ?? throw new RuntimeException("Cannot retrieve permission: {$this->grant_command_permission}"));
