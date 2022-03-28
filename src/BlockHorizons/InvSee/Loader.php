@@ -6,6 +6,7 @@ namespace BlockHorizons\InvSee;
 
 use BlockHorizons\InvSee\commands\EnderInvSeeCommandExecutor;
 use BlockHorizons\InvSee\commands\InvSeeCommandExecutor;
+use BlockHorizons\InvSee\commands\InvSeeModuleCommandExecutor;
 use BlockHorizons\InvSee\module\ModuleManager;
 use BlockHorizons\InvSee\player\InvSeePlayerList;
 use muqsit\invmenu\InvMenuHandler;
@@ -40,6 +41,12 @@ final class Loader extends PluginBase{
 
 		$this->module_manager = new ModuleManager($this);
 		$this->module_manager->init();
+
+		$command = $this->getCommand("invseemodule");
+		if(!($command instanceof PluginCommand)){
+			throw new RuntimeException("Command \"invseemodule\" is not registered");
+		}
+		$command->setExecutor(new InvSeeModuleCommandExecutor($this->module_manager));
 	}
 
 	protected function onDisable() : void{

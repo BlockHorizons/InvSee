@@ -12,11 +12,18 @@ commands:
     description: View a player's ender inventory
     usage: /enderinvsee <player>
     permission: invsee.command.enderinvsee
+  invseemodule:
+    description: Manage plugin modules
+    usage: /invseemod <player>
+    permission: invsee.command.invseemodule
+    aliases: ["invseemod"]
 permissions:
   invsee.command.invsee:
     default: true
   invsee.command.enderinvsee:
     default: true
+  invsee.command.invseemodule:
+    default: op
   invsee.inventory.view:
     default: op
     description: "Allows viewing a player's inventory."

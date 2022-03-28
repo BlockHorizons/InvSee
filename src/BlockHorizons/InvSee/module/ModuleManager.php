@@ -43,8 +43,6 @@ final class ModuleManager{
 		$this->loader->saveResource("modules.yml");
 		$this->config = new Config($this->loader->getDataFolder() . "modules.yml");
 		$this->logger = new PrefixedLogger($this->loader->getLogger(), "Module Manager");
-
-		// TODO: A command to manage all modules - modules can be enabled and disabled dynamically
 	}
 
 	public function init() : void{
@@ -84,6 +82,14 @@ final class ModuleManager{
 
 	public function getLogger() : Logger{
 		return $this->logger;
+	}
+
+	public function isEnabled(ModuleInfo $info) : bool{
+		if(!isset($this->modules[$info->identifier])){
+			throw new RuntimeException("Invalid module: {$info->identifier}");
+		}
+
+		return isset($this->enabled[$info->identifier]);
 	}
 
 	/**
