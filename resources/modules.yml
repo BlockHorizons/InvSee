@@ -1,5 +1,7 @@
 # States of each module
 # A state must be either "enabled" or "disabled"
+# These are the default states of the listed modules. It is possible to change
+# states of modules during runtime via the /invseemodule command.
 module-states:
   # Enables InvSee by Request - lets players request other players to view
   # their inventory contents.
