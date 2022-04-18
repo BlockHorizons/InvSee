@@ -56,6 +56,13 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 	/**
 	 * @var Closure
 	 *
+	 * @phpstan-var Closure() : void
+	 */
+	private Closure $event_unregister;
+
+	/**
+	 * @var Closure
+	 *
 	 * @phpstan-var Closure(Player, string) : ?bool
 	 */
 	private Closure $checker;
@@ -214,11 +221,12 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 
 
 		// Session registration
-		$loader->getServer()->getPluginManager()->registerEvent(PlayerQuitEvent::class, function(PlayerQuitEvent $event) : void{
+		$loader->getServer()->getPluginManager()->registerEvent(PlayerQuitEvent::class, $event = function(PlayerQuitEvent $event) : void{
 			$player = $event->getPlayer();
 			unset($this->requests[$player->getId()]);
 			$this->revokePlayerPermission($player);
 		}, EventPriority::MONITOR, $loader);
+		$this->event_unregister = ModuleUtils::getEventListenerUnregisterExecutor(PlayerQuitEvent::class, EventPriority::MONITOR, $event);
 
 		$this->checker = function(Player $player, string $viewing) : ?bool{
 			return $this->hasPlayerPermission($player, $viewing) ? true : null;
@@ -251,7 +259,9 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 
 		$this->revoker?->cancel();
 		$this->revoker = null;
-		unset($this->checker, $this->loader, $this->logger); // de-initialize properties
+
+		($this->event_unregister)();
+		unset($this->event_unregister, $this->checker, $this->loader, $this->logger); // de-initialize properties
 	}
 
 	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{

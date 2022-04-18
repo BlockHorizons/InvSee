@@ -6,6 +6,8 @@ namespace BlockHorizons\InvSee\module;
 
 use BlockHorizons\InvSee\Loader;
 use BlockHorizons\InvSee\module\utils\ModuleCommand;
+use BlockHorizons\InvSee\module\utils\ModuleUtils;
+use Closure;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
@@ -29,6 +31,13 @@ final class PortableEnderChestModule implements Module, CommandExecutor{
 
 	private Loader $loader;
 
+	/**
+	 * @var Closure
+	 *
+	 * @phpstan-var Closure() : void
+	 */
+	private Closure $event_unregister;
+
 	/** @var array<string, int> */
 	private array $viewing = [];
 
@@ -40,11 +49,12 @@ final class PortableEnderChestModule implements Module, CommandExecutor{
 		$this->command->setup($loader, $this);
 		$this->loader = $loader;
 
-		$loader->getServer()->getPluginManager()->registerEvent(InventoryCloseEvent::class, function(InventoryCloseEvent $event) : void{
+		$loader->getServer()->getPluginManager()->registerEvent(InventoryCloseEvent::class, $event = function(InventoryCloseEvent $event) : void{
 			if(isset($this->viewing[$uuid = $event->getPlayer()->getUniqueId()->getBytes()]) && $this->viewing[$uuid] === spl_object_id($event->getInventory())){
 				unset($this->viewing[$uuid]);
 			}
 		}, EventPriority::MONITOR, $loader);
+		$this->event_unregister = ModuleUtils::getEventListenerUnregisterExecutor(InventoryCloseEvent::class, EventPriority::MONITOR, $event);
 	}
 
 	public function onDisable(Loader $loader) : void{
@@ -55,6 +65,9 @@ final class PortableEnderChestModule implements Module, CommandExecutor{
 			$server->getPlayerByRawUUID($uuid)?->removeCurrentWindow();
 		}
 		$this->viewing = [];
+
+		($this->event_unregister)();
+		unset($this->event_unregister);
 	}
 
 	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
