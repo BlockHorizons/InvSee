@@ -9,10 +9,14 @@ use BlockHorizons\InvSee\commands\InvSeeCommandExecutor;
 use BlockHorizons\InvSee\commands\InvSeeModuleCommandExecutor;
 use BlockHorizons\InvSee\module\ModuleManager;
 use BlockHorizons\InvSee\player\InvSeePlayerList;
+use BlockHorizons\InvSee\utils\playerselector\ExactPlayerSelector;
+use BlockHorizons\InvSee\utils\playerselector\PrefixOfflinePlayerSelector;
+use BlockHorizons\InvSee\utils\playerselector\PrefixOnlinePlayerSelector;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\command\PluginCommand;
 use pocketmine\plugin\PluginBase;
 use RuntimeException;
+use function var_dump;
 
 final class Loader extends PluginBase{
 
@@ -27,17 +31,24 @@ final class Loader extends PluginBase{
 		$this->initVirions();
 		$this->player_list->init($this);
 
+		$command_player_selector = match($this->getConfig()->get("command-player-selector-type")){
+			"exact" => new ExactPlayerSelector(),
+			"prefix-online" => new PrefixOnlinePlayerSelector($this->getServer()),
+			"prefix-offline" => new PrefixOfflinePlayerSelector($this->getServer()),
+			default => throw new RuntimeException("Invalid command-player-selector-type configured: {$this->getConfig()->get("command-player-selector-type")}")
+		};
+
 		$command = $this->getCommand("invsee");
 		if(!($command instanceof PluginCommand)){
 			throw new RuntimeException("Command \"invsee\" is not registered");
 		}
-		$command->setExecutor(new InvSeeCommandExecutor($this->player_list));
+		$command->setExecutor(new InvSeeCommandExecutor($this->player_list, $command_player_selector));
 
 		$command = $this->getCommand("enderinvsee");
 		if(!($command instanceof PluginCommand)){
 			throw new RuntimeException("Command \"enderinvsee\" is not registered");
 		}
-		$command->setExecutor(new EnderInvSeeCommandExecutor($this->player_list));
+		$command->setExecutor(new EnderInvSeeCommandExecutor($this->player_list, $command_player_selector));
 
 		$this->module_manager = new ModuleManager($this);
 		$this->module_manager->init();

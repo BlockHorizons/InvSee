@@ -1,0 +1,6 @@
+# Select a player selector type to use during command (/invsee, /enderinvsee)
+# Available types:
+#   exact: Player name must be typed in exactly (f.e., /invsee steve)
+#   prefix-online: Select online player whose name starts with input (f.e., /invsee ste), fallback to exact offline name
+#   prefix-offline: Similar to prefix-online but targets offline players by prefix as well
+command-player-selector-type: exact

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BlockHorizons\InvSee\commands;
 
 use BlockHorizons\InvSee\player\InvSeePlayerList;
+use BlockHorizons\InvSee\utils\playerselector\PlayerSelector;
 use InvalidArgumentException;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
@@ -17,7 +18,8 @@ final class EnderInvSeeCommandExecutor implements CommandExecutor{
 	private InvViewPermissionChecker $view_permission_checker;
 
 	public function __construct(
-		private InvSeePlayerList $player_list
+		private InvSeePlayerList $player_list,
+		private PlayerSelector $player_selector
 	){
 		$this->view_permission_checker = new InvViewPermissionChecker();
 		$this->getViewPermissionChecker()->register(static function(Player $player, string $viewing) : ?bool{
@@ -46,8 +48,9 @@ final class EnderInvSeeCommandExecutor implements CommandExecutor{
 			return false;
 		}
 
+		$who = $this->player_selector->select($args[0]);
 		foreach($this->getViewPermissionChecker()->getAll() as $checker){
-			$result = $checker($sender, $args[0]);
+			$result = $checker($sender, $who);
 			if($result === null){ // result = null
 				continue;
 			}
@@ -58,7 +61,7 @@ final class EnderInvSeeCommandExecutor implements CommandExecutor{
 		}
 
 		try{
-			$player = $this->player_list->getOrCreate($args[0]);
+			$player = $this->player_list->getOrCreate($who);
 		}catch(InvalidArgumentException $e){
 			$sender->sendMessage(TextFormat::RED . $e->getMessage());
 			return true;
