@@ -6,17 +6,13 @@ namespace BlockHorizons\InvSee\commands;
 
 use BlockHorizons\InvSee\player\InvSeePlayerList;
 use BlockHorizons\InvSee\utils\playerselector\PlayerSelector;
-use Closure;
 use InvalidArgumentException;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
-use SplPriorityQueue;
 use function implode;
-use function spl_object_id;
-use function uasort;
 
 final class InvSeeCommandExecutor implements CommandExecutor{
 
@@ -53,7 +49,7 @@ final class InvSeeCommandExecutor implements CommandExecutor{
 			return false;
 		}
 
-		$who = $this->player_selector->select($args[0]);
+		$who = $this->player_selector->select(implode(" ", $args));
 		foreach($this->getViewPermissionChecker()->getAll() as $checker){
 			$result = $checker($sender, $who);
 			if($result === null){ // result = null

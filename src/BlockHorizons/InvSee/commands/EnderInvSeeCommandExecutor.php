@@ -12,6 +12,7 @@ use pocketmine\command\CommandExecutor;
 use pocketmine\command\CommandSender;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
+use function implode;
 
 final class EnderInvSeeCommandExecutor implements CommandExecutor{
 
@@ -48,7 +49,7 @@ final class EnderInvSeeCommandExecutor implements CommandExecutor{
 			return false;
 		}
 
-		$who = $this->player_selector->select($args[0]);
+		$who = $this->player_selector->select(implode(" ", $args));
 		foreach($this->getViewPermissionChecker()->getAll() as $checker){
 			$result = $checker($sender, $who);
 			if($result === null){ // result = null

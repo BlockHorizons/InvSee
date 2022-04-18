@@ -16,7 +16,6 @@ use pocketmine\event\inventory\InventoryCloseEvent;
 use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 use function spl_object_id;
-use function var_dump;
 
 final class PortableEnderChestModule implements Module, CommandExecutor{
 

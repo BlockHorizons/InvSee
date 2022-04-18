@@ -16,7 +16,6 @@ use muqsit\invmenu\InvMenuHandler;
 use pocketmine\command\PluginCommand;
 use pocketmine\plugin\PluginBase;
 use RuntimeException;
-use function var_dump;
 
 final class Loader extends PluginBase{
 
