@@ -7,6 +7,7 @@ namespace BlockHorizons\InvSee\module;
 use BlockHorizons\InvSee\commands\EnderInvSeeCommandExecutor;
 use BlockHorizons\InvSee\commands\InvSeeCommandExecutor;
 use BlockHorizons\InvSee\Loader;
+use BlockHorizons\InvSee\module\utils\ModuleUtils;
 use Closure;
 use InvalidArgumentException;
 use Logger;
@@ -189,13 +190,13 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 		if(!$permission_manager->addPermission($request_command_permission)){
 			throw new RuntimeException("Permission {$request_command_permission->getName()} is already registered");
 		}
-		ModuleUtil::assignPermissionDefault($request_command_permission, $this->request_command_permission_accessibility);
+		ModuleUtils::assignPermissionDefault($request_command_permission, $this->request_command_permission_accessibility);
 
 		$grant_command_permission = new Permission($this->grant_command_permission, "Grants permission to /{$this->grant_command_permission} command");
 		if(!$permission_manager->addPermission($grant_command_permission)){
 			throw new RuntimeException("Permission {$grant_command_permission->getName()} is already registered");
 		}
-		ModuleUtil::assignPermissionDefault($grant_command_permission, $this->grant_command_permission_accessibility);
+		ModuleUtils::assignPermissionDefault($grant_command_permission, $this->grant_command_permission_accessibility);
 
 
 		// Command registration

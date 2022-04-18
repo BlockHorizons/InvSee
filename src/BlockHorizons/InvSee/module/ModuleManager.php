@@ -39,6 +39,12 @@ final class ModuleManager{
 			"Allows players to request other players to view their inventory",
 			InvSeeByRequestModule::class
 		));
+		$this->register(new ModuleInfo(
+			"portable-ender-chest",
+			"Portable Ender Chest",
+			"Allows players to portably access ender inventory via command",
+			PortableEnderChestModule::class
+		));
 
 		$this->loader->saveResource("modules.yml");
 		$this->config = new Config($this->loader->getDataFolder() . "modules.yml");

@@ -47,9 +47,14 @@ final class EnderInvSeeCommandExecutor implements CommandExecutor{
 		}
 
 		foreach($this->getViewPermissionChecker()->getAll() as $checker){
-			if(!$checker($sender, $args[0])){
-				return true;
+			$result = $checker($sender, $args[0]);
+			if($result === null){ // result = null
+				continue;
 			}
+			if($result){ // result = true
+				break;
+			}
+			return true; // result = false
 		}
 
 		try{

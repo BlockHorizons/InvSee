@@ -7,6 +7,9 @@ module-states:
   # their inventory contents.
   # See: https://github.com/BlockHorizons/InvSee/issues/10
   invsee-by-request: enabled
+  # Enables Portable Ender Chest - lets players access their ender inventory
+  # portably via command
+  portable-ender-chest: disabled
 
 # Configurables for InvSee by Request
 invsee-by-request:
@@ -17,12 +20,14 @@ invsee-by-request:
   #   none: Grants permission to no one by default
   request-command:
     name: invseereq
+    aliases: []
     permission:
       name: "invsee.command.invseereq"
       access: everyone
   # Command run by a player to grant viewing access to a requester
   grant-command:
     name: invseegrant
+    aliases: []
     permission:
       name: "invsee.command.invseegrant"
       access: everyone
@@ -34,3 +39,12 @@ invsee-by-request:
   # For there to be no timeout limit, set the timeout to infinity like so:
   #   grant-timeout: .inf
   grant-timeout: 30
+
+# Configurables for Portable Ender Chest
+portable-ender-chest:
+  command:
+    name: enderchest
+    aliases: ["echest"]
+    permission:
+      name: "invsee.command.enderchest"
+      access: everyone
