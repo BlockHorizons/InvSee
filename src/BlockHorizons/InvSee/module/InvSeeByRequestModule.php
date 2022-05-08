@@ -8,6 +8,7 @@ use BlockHorizons\InvSee\commands\EnderInvSeeCommandExecutor;
 use BlockHorizons\InvSee\commands\InvSeeCommandExecutor;
 use BlockHorizons\InvSee\Loader;
 use BlockHorizons\InvSee\module\utils\ModuleUtils;
+use BlockHorizons\InvSee\utils\config\Configuration;
 use Closure;
 use InvalidArgumentException;
 use Logger;
@@ -36,7 +37,7 @@ use function strtolower;
 
 final class InvSeeByRequestModule implements Module, CommandExecutor{
 
-	public static function fromConfiguration(array $configuration) : Module{
+	public static function fromConfiguration(Configuration $configuration) : Module{
 		return new self(
 			$configuration["request-command"]["name"],
 			$configuration["request-command"]["permission"]["name"],

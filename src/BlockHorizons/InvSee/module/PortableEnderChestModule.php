@@ -7,6 +7,7 @@ namespace BlockHorizons\InvSee\module;
 use BlockHorizons\InvSee\Loader;
 use BlockHorizons\InvSee\module\utils\ModuleCommand;
 use BlockHorizons\InvSee\module\utils\ModuleUtils;
+use BlockHorizons\InvSee\utils\config\Configuration;
 use Closure;
 use pocketmine\command\Command;
 use pocketmine\command\CommandExecutor;
@@ -19,7 +20,7 @@ use function spl_object_id;
 
 final class PortableEnderChestModule implements Module, CommandExecutor{
 
-	public static function fromConfiguration(array $configuration) : Module{
+	public static function fromConfiguration(Configuration $configuration) : Module{
 		return new self(
 			ModuleCommand::parse($configuration["command"], [
 				"usage" => "/{$configuration["command"]["name"]} - Access your ender chest",

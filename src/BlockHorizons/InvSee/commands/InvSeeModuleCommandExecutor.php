@@ -79,7 +79,9 @@ final class InvSeeModuleCommandExecutor implements CommandExecutor{
 					}
 
 					$this->manager->enable($module_info);
-					$sender->sendMessage(TextFormat::GREEN . "Module \"{$module_info->name}\" is now enabled.");
+					$sender->sendMessage($this->manager->isEnabled($module_info) ? TextFormat::GREEN . "Module \"{$module_info->name}\" is now enabled." :
+						TextFormat::RED . "An error occurred while enabling module \"{$module_info->name}\"."
+					);
 					return true;
 				case "disable":
 					if(!isset($args[1])){
@@ -98,7 +100,9 @@ final class InvSeeModuleCommandExecutor implements CommandExecutor{
 					}
 
 					$this->manager->disable($module_info);
-					$sender->sendMessage(TextFormat::GREEN . "Module \"{$module_info->name}\" is now disabled.");
+					$sender->sendMessage(!$this->manager->isEnabled($module_info) ? TextFormat::GREEN . "Module \"{$module_info->name}\" is now disabled." :
+						TextFormat::RED . "An error occurred while disabling module \"{$module_info->name}\"."
+					);
 					return true;
 			}
 		}

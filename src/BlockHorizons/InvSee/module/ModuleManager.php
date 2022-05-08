@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace BlockHorizons\InvSee\module;
 
 use BlockHorizons\InvSee\Loader;
+use BlockHorizons\InvSee\utils\config\Configuration;
+use BlockHorizons\InvSee\utils\config\ConfigurationException;
 use InvalidArgumentException;
 use Logger;
 use pocketmine\utils\Config;
@@ -13,7 +15,7 @@ use RuntimeException;
 
 final class ModuleManager{
 
-	private Config $config;
+	private Configuration $config;
 	private Logger $logger;
 
 	/**
@@ -47,16 +49,16 @@ final class ModuleManager{
 		));
 
 		$this->loader->saveResource("modules.yml");
-		$this->config = new Config($this->loader->getDataFolder() . "modules.yml");
+		$this->config = Configuration::fromConfig(new Config($this->loader->getDataFolder() . "modules.yml"));
 		$this->logger = new PrefixedLogger($this->loader->getLogger(), "Module Manager");
 	}
 
 	public function init() : void{
-		foreach($this->config->get("module-states") as $identifier => $state){
+		foreach($this->config["module-states"] as $identifier => $state){
 			if($state === "enabled"){
 				$this->enable($this->get($identifier));
 			}elseif($state !== "disabled"){
-				throw new RuntimeException("State must be either \"enabled\" or \"disabled\", got \"{$state}\" for module {$identifier}");
+				$this->config->throwUndefinedConfiguration($identifier, "State must be either \"enabled\" or \"disabled\", got \"{$state}\" for module {$identifier}");
 			}
 		}
 	}
@@ -111,8 +113,14 @@ final class ModuleManager{
 			throw new RuntimeException("Module {$info->identifier} is already enabled");
 		}
 
-		$configuration ??= $this->config->get($info->identifier, []);
-		$this->enabled[$info->identifier] = $info->module_class::fromConfiguration($configuration);
+		try{
+			$module = $info->module_class::fromConfiguration($configuration ?? $this->config[$info->identifier]);
+		}catch(ConfigurationException $e){
+			$this->loader->onConfigurationException($e);
+			return;
+		}
+
+		$this->enabled[$info->identifier] = $module;
 		$this->enabled[$info->identifier]->onEnable($this->loader);
 		$this->logger->debug("Enabled module: {$info->identifier}");
 	}
