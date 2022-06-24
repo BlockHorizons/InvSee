@@ -90,8 +90,8 @@ final class InvSeePlayerList{
 		if(isset($this->players[$name = strtolower($player_name)])){
 			$player = $this->players[$name];
 			if(
-				empty($player->getEnderChestInventoryMenu()->getInventory()->getViewers()) &&
-				empty($player->getInventoryMenu()->getInventory()->getViewers())
+				count($player->getEnderChestInventoryMenu()->getInventory()->getViewers()) === 0 &&
+				count($player->getInventoryMenu()->getInventory()->getViewers()) === 0
 			){
 				$this->destroy($player);
 			}
