@@ -8,15 +8,12 @@ use BlockHorizons\InvSee\Loader;
 use InvalidArgumentException;
 use Logger;
 use pocketmine\player\Player;
-use pocketmine\scheduler\ClosureTask;
-use pocketmine\scheduler\TaskScheduler;
 use pocketmine\Server;
 use PrefixedLogger;
 
 final class InvSeePlayerList{
 
 	private Server $server;
-	private TaskScheduler $scheduler;
 	private Logger $logger;
 
 	/** @var InvSeePlayer[] */
@@ -30,7 +27,6 @@ final class InvSeePlayerList{
 
 	public function init(Loader $loader) : void{
 		$this->server = $loader->getServer();
-		$this->scheduler = $loader->getScheduler();
 		$this->logger = $loader->getLogger();
 		$this->server->getPluginManager()->registerEvents(new InvSeePlayerListEventListener($loader), $loader);
 	}
@@ -90,17 +86,15 @@ final class InvSeePlayerList{
 		}
 	}
 
-	public function tryGarbageCollecting(string $player, int $delay = 1) : void{
-		$this->scheduler->scheduleDelayedTask(new ClosureTask(function() use($player) : void{
-			if(isset($this->players[$name = strtolower($player)])){
-				$player = $this->players[$name];
-				if(
-					empty($player->getEnderChestInventoryMenu()->getInventory()->getViewers()) &&
-					empty($player->getInventoryMenu()->getInventory()->getViewers())
-				){
-					$this->destroy($player);
-				}
+	public function tryGarbageCollecting(string $player_name) : void{
+		if(isset($this->players[$name = strtolower($player_name)])){
+			$player = $this->players[$name];
+			if(
+				empty($player->getEnderChestInventoryMenu()->getInventory()->getViewers()) &&
+				empty($player->getInventoryMenu()->getInventory()->getViewers())
+			){
+				$this->destroy($player);
 			}
-		}), $delay);
+		}
 	}
 }
