@@ -24,11 +24,8 @@ final class OfflinePlayerInventory{
 	}
 
 	/**
-	 * @param Item[] $inventory
-	 * @param Item[] $armor_inventory
-	 *
-	 * @phpstan-param array<int, Item> $inventory
-	 * @phpstan-param array<int, Item> $armor_inventory
+	 * @param array<int, Item> $inventory
+	 * @param array<int, Item> $armor_inventory
 	 */
 	private function readInventoryAndArmorInventory(array &$inventory, array &$armor_inventory) : void{
 		$inventory = [];
@@ -53,11 +50,8 @@ final class OfflinePlayerInventory{
 	}
 
 	/**
-	 * @param Item[] $inventory
-	 * @param Item[] $armor_inventory
-	 *
-	 * @phpstan-param array<int, Item> $inventory
-	 * @phpstan-param array<int, Item> $armor_inventory
+	 * @param array<int, Item> $inventory
+	 * @param array<int, Item> $armor_inventory
 	 */
 	private function writeInventoryAndArmorInventory(array $inventory, array $armor_inventory) : void{
 		$serialized_inventory = [];
@@ -73,9 +67,7 @@ final class OfflinePlayerInventory{
 	}
 
 	/**
-	 * @return Item[]
-	 *
-	 * @phpstan-return array<int, Item>
+	 * @return array<int, Item>
 	 */
 	public function readInventory() : array{
 		$inventory = [];
@@ -85,10 +77,8 @@ final class OfflinePlayerInventory{
 	}
 
 	/**
-	 * @param Item[] $inventory
+	 * @param array<int, Item> $inventory
 	 * @return self
-	 *
-	 * @phpstan-param array<int, Item> $inventory
 	 */
 	public function writeInventory(array $inventory) : self{
 		$_ = [];
@@ -99,9 +89,7 @@ final class OfflinePlayerInventory{
 	}
 
 	/**
-	 * @return Item[]
-	 *
-	 * @phpstan-return array<int, Item>
+	 * @return array<int, Item>
 	 */
 	public function readArmorInventory() : array{
 		$_ = [];
@@ -111,10 +99,8 @@ final class OfflinePlayerInventory{
 	}
 
 	/**
-	 * @param Item[] $inventory
+	 * @param array<int, Item> $inventory
 	 * @return self
-	 *
-	 * @phpstan-param array<int, Item> $inventory
 	 */
 	public function writeArmorInventory(array $inventory) : self{
 		$normal_inventory = [];
@@ -125,9 +111,7 @@ final class OfflinePlayerInventory{
 	}
 
 	/**
-	 * @return Item[]
-	 *
-	 * @phpstan-return array<int, Item>
+	 * @return array<int, Item>
 	 */
 	public function readEnderInventory() : array{
 		$enderChestInventoryTag = $this->data->getListTag("EnderChestInventory");
@@ -144,10 +128,8 @@ final class OfflinePlayerInventory{
 	}
 
 	/**
-	 * @param Item[] $inventory
+	 * @param array<int, Item> $inventory
 	 * @return self
-	 *
-	 * @phpstan-param array<int, Item> $inventory
 	 */
 	public function writeEnderInventory(array $inventory) : self{
 		$tag = new ListTag([], NBT::TAG_Compound);

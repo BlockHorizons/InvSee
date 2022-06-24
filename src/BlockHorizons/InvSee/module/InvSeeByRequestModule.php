@@ -54,33 +54,19 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 	private Logger $logger;
 	private ?TaskHandler $revoker = null;
 
-	/**
-	 * @var Closure
-	 *
-	 * @phpstan-var Closure() : void
-	 */
+	/** @var Closure() : void */
 	private Closure $event_unregister;
 
-	/**
-	 * @var Closure
-	 *
-	 * @phpstan-var Closure(Player, string) : ?bool
-	 */
+	/** @var Closure(Player, string) : ?bool */
 	private Closure $checker;
 
-	/**
-	 * @var array<int, array<int, float>>
-	 */
+	/** @var array<int, array<int, float>> */
 	private array $requests = [];
 
-	/**
-	 * @var array<string, int>
-	 */
+	/** @var array<string, int> */
 	private array $access_player_expiry = [];
 
-	/**
-	 * @var array<int, array<string, string>>
-	 */
+	/** @var array<int, array<string, string>> */
 	private array $access_expiry_player_viewing = [];
 
 	public function __construct(
@@ -105,14 +91,11 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 	}
 
 	/**
+	 * @template TCommandExecutor of CommandExecutor
 	 * @param Loader $loader
 	 * @param string $command_name
-	 * @param string $executor_class
-	 * @return CommandExecutor
-	 *
-	 * @phpstan-template TCommandExecutor of CommandExecutor
-	 * @phpstan-param class-string<TCommandExecutor> $executor_class
-	 * @phpstan-return TCommandExecutor
+	 * @param class-string<TCommandExecutor> $executor_class
+	 * @return TCommandExecutor
 	 */
 	private function getCommandExecutor(Loader $loader, string $command_name, string $executor_class) : CommandExecutor{
 		$command = $loader->getCommand($command_name);

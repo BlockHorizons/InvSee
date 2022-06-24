@@ -10,9 +10,7 @@ final class ModuleInfo{
 	 * @param string $identifier
 	 * @param string $name
 	 * @param string $description
-	 * @param string|Module $module_class
-	 *
-	 * @phpstan-param class-string<Module> $module_class
+	 * @param class-string<Module> $module_class
 	 */
 	public function __construct(
 		public string $identifier,

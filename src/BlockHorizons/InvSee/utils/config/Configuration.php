@@ -13,7 +13,7 @@ use function implode;
 use function is_array;
 
 /**
- * @phpstan-implements ArrayAccess<int|string, mixed>
+ * @implements ArrayAccess<int|string, mixed>
  */
 final class Configuration implements ArrayAccess{
 
@@ -23,11 +23,8 @@ final class Configuration implements ArrayAccess{
 
 	/**
 	 * @param string $file_name
-	 * @param mixed[] $configuration
-	 * @param string[] $parents
-	 *
-	 * @phpstan-param array<int|string, mixed> $configuration
-	 * @phpstan-param array<string> $parents
+	 * @param array<int|string, mixed> $configuration
+	 * @param array<string> $parents
 	 */
 	public function __construct(
 		private string $file_name,

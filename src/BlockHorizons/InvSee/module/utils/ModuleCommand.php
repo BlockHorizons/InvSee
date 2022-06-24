@@ -16,10 +16,8 @@ use function implode;
 final class ModuleCommand{
 
 	/**
-	 * @param mixed[] ...$configurations
+	 * @param array<string, mixed> ...$configurations
 	 * @return self
-	 *
-	 * @phpstan-param array<string, mixed> ...$configurations
 	 */
 	public static function parse(array ...$configurations) : self{
 		$get_config = static function(string ...$identifier) use($configurations) : mixed{

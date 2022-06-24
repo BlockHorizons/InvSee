@@ -31,11 +31,7 @@ final class PortableEnderChestModule implements Module, CommandExecutor{
 
 	private Loader $loader;
 
-	/**
-	 * @var Closure
-	 *
-	 * @phpstan-var Closure() : void
-	 */
+	/** @var Closure() : void */
 	private Closure $event_unregister;
 
 	/** @var array<string, int> */

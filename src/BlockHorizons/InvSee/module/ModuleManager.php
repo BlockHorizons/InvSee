@@ -18,18 +18,10 @@ final class ModuleManager{
 	private Configuration $config;
 	private Logger $logger;
 
-	/**
-	 * @var ModuleInfo[]
-	 *
-	 * @phpstan-var array<string, ModuleInfo>
-	 */
+	/** @var array<string, ModuleInfo> */
 	private array $modules = [];
 
-	/**
-	 * @var Module[]
-	 *
-	 * @phpstan-var array<string, Module>
-	 */
+	/** @var array<string, Module> */
 	private array $enabled = [];
 
 	public function __construct(
@@ -80,9 +72,7 @@ final class ModuleManager{
 	}
 
 	/**
-	 * @return ModuleInfo[]
-	 *
-	 * @phpstan-return array<string, ModuleInfo>
+	 * @return array<string, ModuleInfo>
 	 */
 	public function getAll() : array{
 		return $this->modules;

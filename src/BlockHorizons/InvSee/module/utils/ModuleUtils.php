@@ -26,15 +26,11 @@ final class ModuleUtils{
 	}
 
 	/**
-	 * @param string $event_class
+	 * @template TEvent of \pocketmine\event\Event
+	 * @param class-string<TEvent> $event_class
 	 * @param int $priority
-	 * @param Closure $event_handler
-	 * @return Closure
-	 *
-	 * @phpstan-template TEvent of \pocketmine\event\Event
-	 * @phpstan-param class-string<TEvent> $event_class
-	 * @phpstan-param Closure(TEvent) : void $event_handler
-	 * @phpstan-return Closure() : void
+	 * @param Closure(TEvent) : void $event_handler
+	 * @return Closure() : void
 	 */
 	public static function getEventListenerUnregisterExecutor(string $event_class, int $priority, Closure $event_handler) : Closure{
 		foreach(HandlerListManager::global()->getListFor($event_class)->getListenersByPriority($priority) as $entry){
