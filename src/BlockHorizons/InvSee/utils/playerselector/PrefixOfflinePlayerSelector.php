@@ -7,7 +7,7 @@ namespace BlockHorizons\InvSee\utils\playerselector;
 use DirectoryIterator;
 use pocketmine\Server;
 use SplFileInfo;
-use Webmozart\PathUtil\Path;
+use Symfony\Component\Filesystem\Path;
 use function stripos;
 use function strlen;
 use function strtolower;
