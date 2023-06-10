@@ -93,7 +93,7 @@ final class InvSeePlayer{
 			$player = $transaction->getPlayer();
 			$permission = strtolower($player->getName()) === strtolower($this->player) ? "invsee.inventory.modify.self" : "invsee.inventory.modify";
 			$slot = $transaction->getAction()->getSlot();
-			return ($slot < 36 || isset(InvCombiner::MENU_TO_ARMOR_SLOTS[$slot])) && $player->hasPermission($permission) ? $transaction->continue() : $transaction->discard();
+			return ($slot < 36 || isset(InvCombiner::MENU_TO_ARMOR_SLOTS[$slot]) || $slot === InvCombiner::OFFHAND_SLOT_OFFSET) && $player->hasPermission($permission) ? $transaction->continue() : $transaction->discard();
 		});
 		$this->inventory_menu->setInventoryCloseListener(function() use($list) : void{
 			$list->tryGarbageCollecting($this->player);
@@ -113,15 +113,17 @@ final class InvSeePlayer{
 			$inventory = $player->getInventory()->getContents();
 			$ender_inventory = $player->getEnderInventory()->getContents();
 			$armor_inventory = $player->getArmorInventory()->getContents();
+			$offhand_inventory = $player->getOffHandInventory()->getContents();
 		}else{
 			$nbt = Server::getInstance()->getOfflinePlayerData($this->player) ?? throw new InvalidArgumentException("Could not find player data of \"" . $this->player . "\"");
 			$offline_player_inventory = OfflinePlayerInventory::fromOfflinePlayerData($nbt);
 			$inventory = $offline_player_inventory->readInventory();
 			$ender_inventory = $offline_player_inventory->readEnderInventory();
 			$armor_inventory = $offline_player_inventory->readArmorInventory();
+			$offhand_inventory = [$offline_player_inventory->readOffhandItem()];
 		}
 
-		$this->inventory_menu->getInventory()->setContents(InvCombiner::combine($inventory, $armor_inventory));
+		$this->inventory_menu->getInventory()->setContents(InvCombiner::combine($inventory, $armor_inventory, $offhand_inventory));
 		$this->ender_inventory_menu->getInventory()->setContents($ender_inventory);
 
 		if($player !== null){

@@ -6,9 +6,11 @@ namespace BlockHorizons\InvSee\player\handler;
 
 use BlockHorizons\InvSee\listeners\InvSeeArmorInventoryListener;
 use BlockHorizons\InvSee\listeners\InvSeeListeners;
+use BlockHorizons\InvSee\listeners\InvSeeOffhandInventoryListener;
 use BlockHorizons\InvSee\listeners\PlayerArmorInventoryListener;
 use BlockHorizons\InvSee\listeners\PlayerEnderInventoryListener;
 use BlockHorizons\InvSee\listeners\PlayerInventoryListener;
+use BlockHorizons\InvSee\listeners\PlayerOffhandInventoryListener;
 use BlockHorizons\InvSee\player\InvSeePlayer;
 use BlockHorizons\InvSee\utils\InvCombiner;
 use LogicException;
@@ -30,18 +32,21 @@ final class OnlineInvSeePlayerHandler implements InvSeePlayerHandler{
 
 		// synchronize with existing InvSeePlayer and install listeners for real-time InvSeePlayer <-> Player synchronization
 
-		InvCombiner::split($player->getInventoryMenu()->getInventory()->getContents(), $inventory, $armor_inventory);
+		InvCombiner::split($player->getInventoryMenu()->getInventory()->getContents(), $inventory, $armor_inventory, $offhand_item);
 		$this->player->getInventory()->setContents($inventory);
 		$this->player->getArmorInventory()->setContents($armor_inventory);
 		$this->player->getEnderInventory()->setContents($player->getEnderChestInventoryMenu()->getInventory()->getContents());
+		$this->player->getOffHandInventory()->setContents([$offhand_item]);
 
 		$this->player->getInventory()->getListeners()->add(new PlayerInventoryListener($player->getInventoryMenu()->getInventory()));
 		$this->player->getArmorInventory()->getListeners()->add(new PlayerArmorInventoryListener($player->getInventoryMenu()->getInventory()));
 		$this->player->getEnderInventory()->getListeners()->add(new PlayerEnderInventoryListener($player->getEnderChestInventoryMenu()->getInventory()));
+		$this->player->getOffHandInventory()->getListeners()->add(new PlayerOffhandInventoryListener($player->getInventoryMenu()->getInventory()));
 
 		$player->getInventoryMenu()->getInventory()->getListeners()->add(
 			new PlayerInventoryListener($this->player->getInventory()),
-			new InvSeeArmorInventoryListener($this->player->getArmorInventory())
+			new InvSeeArmorInventoryListener($this->player->getArmorInventory()),
+			new InvSeeOffhandInventoryListener($this->player->getOffHandInventory())
 		);
 		$player->getEnderChestInventoryMenu()->getInventory()->getListeners()->add(new PlayerEnderInventoryListener($this->player->getEnderInventory()));
 	}
@@ -58,6 +63,7 @@ final class OnlineInvSeePlayerHandler implements InvSeePlayerHandler{
 			$this->player->getInventory(),
 			$this->player->getArmorInventory(),
 			$this->player->getEnderInventory(),
+			$this->player->getOffHandInventory(),
 			$player->getInventoryMenu()->getInventory(),
 			$player->getEnderChestInventoryMenu()->getInventory()
 		] as $inventory){

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BlockHorizons\InvSee\utils;
 
 use pocketmine\item\Item;
+use pocketmine\item\VanillaItems;
 use pocketmine\nbt\NBT;
 use pocketmine\nbt\tag\CompoundTag;
 use pocketmine\nbt\tag\ListTag;
@@ -137,6 +138,16 @@ final class OfflinePlayerInventory{
 			$tag->push($item->nbtSerialize($slot));
 		}
 		$this->data->setTag("EnderChestInventory", $tag);
+		return $this;
+	}
+
+	public function readOffhandItem() : Item{
+		$offHand = $this->data->getCompoundTag("OffHandItem");
+		return $offHand !== null ? Item::nbtDeserialize($offHand) : VanillaItems::AIR();
+	}
+
+	public function writeOffhandItem(Item $item) : self{
+		$this->data->setTag("OffHandItem", $item->nbtSerialize());
 		return $this;
 	}
 }
