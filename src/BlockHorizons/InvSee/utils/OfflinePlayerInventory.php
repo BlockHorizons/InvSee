@@ -147,7 +147,11 @@ final class OfflinePlayerInventory{
 	}
 
 	public function writeOffhandItem(Item $item) : self{
-		$this->data->setTag("OffHandItem", $item->nbtSerialize());
+		if($item->isNull()){
+			$this->data->removeTag("OffHandItem");
+		}else{
+			$this->data->setTag("OffHandItem", $item->nbtSerialize());
+		}
 		return $this;
 	}
 }
