@@ -6,6 +6,6 @@ projects:
     path: ""
     libs:
       - src: muqsit/InvMenu/InvMenu
-        version: ^4.6.1
+        version: ^4.6.3
         branch: pm5
 ...
