@@ -9,8 +9,8 @@ use pocketmine\inventory\InventoryListener;
 final class InvSeeListeners{
 
 	/**
-	 * @param InventoryListener[] $listeners
-	 * @return InvSeeListener[]
+	 * @param array<int, InventoryListener> $listeners
+	 * @return array<int, InvSeeListener>
 	 */
 	public static function find(array $listeners) : array{
 		$result = [];

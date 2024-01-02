@@ -17,10 +17,10 @@ final class InvSeePlayerList{
 	private Server $server;
 	private Logger $logger;
 
-	/** @var InvSeePlayer[] */
+	/** @var array<string, InvSeePlayer> */
 	private array $players = []; // these are NOT online players, these are players whose inventories are being spied upon
 
-	/** @var string[] */
+	/** @var array<string, string> */
 	private array $joined = [];
 
 	public function __construct(){

@@ -80,11 +80,7 @@ final class ModuleManager{
 		return isset($this->enabled[$info->identifier]);
 	}
 
-	/**
-	 * @param ModuleInfo $info
-	 * @param mixed[]|null $configuration
-	 */
-	public function enable(ModuleInfo $info, ?array $configuration = null) : void{
+	public function enable(ModuleInfo $info, ?Configuration $configuration = null) : void{
 		isset($this->modules[$info->identifier]) || throw new RuntimeException("Invalid module: {$info->identifier}");
 		!isset($this->enabled[$info->identifier]) || throw new RuntimeException("Module {$info->identifier} is already enabled");
 		try{

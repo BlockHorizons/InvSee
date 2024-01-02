@@ -24,7 +24,7 @@ final class Configuration implements ArrayAccess{
 	/**
 	 * @param string $file_name
 	 * @param array<int|string, mixed> $configuration
-	 * @param array<string> $parents
+	 * @param list<string> $parents
 	 */
 	public function __construct(
 		readonly private string $file_name,

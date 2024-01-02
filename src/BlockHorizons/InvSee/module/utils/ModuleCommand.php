@@ -58,7 +58,7 @@ final class ModuleCommand{
 	 * @param string $permission_name
 	 * @param string $permission_description
 	 * @param string $permission_accessibility
-	 * @param string[] $aliases
+	 * @param list<string> $aliases
 	 */
 	public function __construct(
 		readonly public string $name,
