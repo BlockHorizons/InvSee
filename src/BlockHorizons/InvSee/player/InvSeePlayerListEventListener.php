@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace BlockHorizons\InvSee\player;
 
-use BlockHorizons\InvSee\Loader;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 
 final class InvSeePlayerListEventListener implements Listener{
 
-	readonly private InvSeePlayerList $player_list;
-
-	public function __construct(Loader $loader){
-		$this->player_list = $loader->getPlayerList();
-	}
+	public function __construct(
+		readonly private InvSeePlayerList $player_list
+	){}
 
 	/**
 	 * @param PlayerJoinEvent $event

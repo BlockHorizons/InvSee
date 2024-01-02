@@ -29,7 +29,7 @@ final class InvSeePlayerList{
 	public function init(Loader $loader) : void{
 		$this->server = $loader->getServer();
 		$this->logger = $loader->getLogger();
-		$this->server->getPluginManager()->registerEvents(new InvSeePlayerListEventListener($loader), $loader);
+		$this->server->getPluginManager()->registerEvents(new InvSeePlayerListEventListener($loader->getPlayerList()), $loader);
 	}
 
 	public function get(string $player) : ?InvSeePlayer{
