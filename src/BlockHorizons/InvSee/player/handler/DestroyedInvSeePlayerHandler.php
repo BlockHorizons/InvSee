@@ -20,7 +20,7 @@ final class DestroyedInvSeePlayerHandler implements InvSeePlayerHandler{
 	public function init(InvSeePlayer $player) : void{
 	}
 
-	public function destroy(InvSeePlayer $player) : void{
+	public function destroy(InvSeePlayer $player) : never{
 		throw new RuntimeException("Cannot destroy " . self::class . " player handler");
 	}
 }

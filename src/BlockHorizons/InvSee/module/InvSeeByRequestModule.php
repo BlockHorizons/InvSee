@@ -79,9 +79,9 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 		readonly private float $request_timeout,
 		readonly private float $grant_timeout
 	){
-		$this->request_command_name === $this->grant_command_name || throw new InvalidArgumentException("Request command name and grant command name must not be the same");
-		$this->request_timeout < 0.0 || throw new InvalidArgumentException("Request timeout cannot be less than 0.0");
-		$this->grant_timeout < 0.0 || throw new InvalidArgumentException("Grant timeout cannot be less than 0.0");
+		$this->request_command_name !== $this->grant_command_name || throw new InvalidArgumentException("Request command name and grant command name must not be the same");
+		$this->request_timeout >= 0.0 || throw new InvalidArgumentException("Request timeout cannot be less than 0.0");
+		$this->grant_timeout >= 0.0 || throw new InvalidArgumentException("Grant timeout cannot be less than 0.0");
 	}
 
 	/**

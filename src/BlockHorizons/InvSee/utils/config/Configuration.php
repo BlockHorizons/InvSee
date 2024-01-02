@@ -32,35 +32,42 @@ final class Configuration implements ArrayAccess{
 		readonly private array $parents = []
 	){}
 
+	public function getFileName() : string{
+		return $this->file_name;
+	}
+
+	/**
+	 * @return array<int|string, mixed>
+	 */
+	public function getConfiguration() : array{
+		return $this->configuration;
+	}
+
 	public function offsetExists(mixed $offset) : bool{
 		return array_key_exists($offset, $this->configuration);
 	}
 
 	public function offsetGet(mixed $offset) : mixed{
-		if(!array_key_exists($offset, $this->configuration)){
-			$this->throwUndefinedConfiguration($offset);
-		}
-
+		array_key_exists($offset, $this->configuration) || $this->throwUndefinedConfiguration($offset);
 		if(is_array($this->configuration[$offset])){
 			return new self($this->file_name, $this->configuration[$offset], [...$this->parents, (string) $offset]);
 		}
-
 		return $this->configuration[$offset];
 	}
 
-	public function offsetSet(mixed $offset, mixed $value) : void{
+	public function offsetSet(mixed $offset, mixed $value) : never{
 		$this->throwInvalidOperation($offset ?? throw new RuntimeException("Offset cannot be null"), "Cannot write to configuration");
 	}
 
-	public function offsetUnset(mixed $offset) : void{
+	public function offsetUnset(mixed $offset) : never{
 		$this->throwInvalidOperation($offset, "Cannot modify configuration");
 	}
 
-	public function throwInvalidOperation(int|string $offset, string $message = "") : void{
+	public function throwInvalidOperation(int|string $offset, string $message = "") : never{
 		throw new InvalidOperationConfigurationException($this->file_name, $offset, $message);
 	}
 
-	public function throwUndefinedConfiguration(int|string $offset, string $message = "") : void{
+	public function throwUndefinedConfiguration(int|string $offset, string $message = "") : never{
 		throw new UndefinedConfigurationException($this->file_name, implode(".", [...$this->parents, $offset]), $message);
 	}
 }

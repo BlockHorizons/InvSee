@@ -18,6 +18,7 @@ use BlockHorizons\InvSee\utils\playerselector\PrefixOnlinePlayerSelector;
 use muqsit\invmenu\InvMenuHandler;
 use pocketmine\command\PluginCommand;
 use pocketmine\plugin\PluginBase;
+use pocketmine\YmlServerProperties;
 use RuntimeException;
 use function assert;
 
@@ -74,6 +75,9 @@ final class Loader extends PluginBase{
 		}
 		$this->getLogger()->warning("Define the configuration property to fix this error.");
 		$this->getLogger()->warning("Alternatively, delete the configuration file so that a new configuration file is generated with the property defined.");
+		if($this->getServer()->getConfigGroup()->getPropertyInt(YmlServerProperties::DEBUG_LEVEL, 1) > 1){
+			$this->getLogger()->logException($exception);
+		}
 		$this->getServer()->shutdown();
 	}
 

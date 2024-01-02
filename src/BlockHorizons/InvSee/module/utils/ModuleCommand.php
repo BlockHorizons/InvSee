@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace BlockHorizons\InvSee\module\utils;
 
 use BlockHorizons\InvSee\Loader;
+use BlockHorizons\InvSee\utils\config\Configuration;
 use pocketmine\command\CommandExecutor;
 use pocketmine\command\PluginCommand;
 use pocketmine\permission\Permission;
@@ -15,11 +16,7 @@ use function implode;
 
 final class ModuleCommand{
 
-	/**
-	 * @param array<string, mixed> ...$configurations
-	 * @return self
-	 */
-	public static function parse(array ...$configurations) : self{
+	public static function parse(Configuration ...$configurations) : self{
 		$get_config = static function(string ...$identifier) use($configurations) : mixed{
 			foreach($configurations as $configuration){
 				$value = $configuration;
@@ -33,7 +30,7 @@ final class ModuleCommand{
 					}
 				}
 				if(current($identifier) === false){
-					return $value;
+					return $value instanceof Configuration ? $value->getConfiguration() : $value;
 				}
 			}
 			throw new RuntimeException("Config identifier " . implode(".", $identifier) . " is not set");
