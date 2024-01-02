@@ -24,39 +24,34 @@ final class OnlineInvSeePlayerHandler implements InvSeePlayerHandler{
 	){}
 
 	public function init(InvSeePlayer $player) : void{
-		if($this->player === null){
-			throw new LogicException("Tried to initialize in an un-constructed or an already-destroyed state");
-		}
+		$this->player ??= throw new LogicException("Tried to initialize in an un-constructed or an already-destroyed state");
 
-		$player->getLogger()->debug("Initializing online player instance: {$this->player->getName()}");
+		$player->logger->debug("Initializing online player instance: {$this->player->getName()}");
 
 		// synchronize with existing InvSeePlayer and install listeners for real-time InvSeePlayer <-> Player synchronization
 
-		InvCombiner::split($player->getInventoryMenu()->getInventory()->getContents(), $inventory, $armor_inventory, $offhand_item);
+		InvCombiner::split($player->inventory_menu->getInventory()->getContents(), $inventory, $armor_inventory, $offhand_item);
 		$this->player->getInventory()->setContents($inventory);
 		$this->player->getArmorInventory()->setContents($armor_inventory);
-		$this->player->getEnderInventory()->setContents($player->getEnderChestInventoryMenu()->getInventory()->getContents());
+		$this->player->getEnderInventory()->setContents($player->ender_inventory_menu->getInventory()->getContents());
 		$this->player->getOffHandInventory()->setContents([$offhand_item]);
 
-		$this->player->getInventory()->getListeners()->add(new PlayerInventoryListener($player->getInventoryMenu()->getInventory()));
-		$this->player->getArmorInventory()->getListeners()->add(new PlayerArmorInventoryListener($player->getInventoryMenu()->getInventory()));
-		$this->player->getEnderInventory()->getListeners()->add(new PlayerEnderInventoryListener($player->getEnderChestInventoryMenu()->getInventory()));
-		$this->player->getOffHandInventory()->getListeners()->add(new PlayerOffhandInventoryListener($player->getInventoryMenu()->getInventory()));
+		$this->player->getInventory()->getListeners()->add(new PlayerInventoryListener($player->inventory_menu->getInventory()));
+		$this->player->getArmorInventory()->getListeners()->add(new PlayerArmorInventoryListener($player->inventory_menu->getInventory()));
+		$this->player->getEnderInventory()->getListeners()->add(new PlayerEnderInventoryListener($player->ender_inventory_menu->getInventory()));
+		$this->player->getOffHandInventory()->getListeners()->add(new PlayerOffhandInventoryListener($player->inventory_menu->getInventory()));
 
-		$player->getInventoryMenu()->getInventory()->getListeners()->add(
+		$player->inventory_menu->getInventory()->getListeners()->add(
 			new PlayerInventoryListener($this->player->getInventory()),
 			new InvSeeArmorInventoryListener($this->player->getArmorInventory()),
 			new InvSeeOffhandInventoryListener($this->player->getOffHandInventory())
 		);
-		$player->getEnderChestInventoryMenu()->getInventory()->getListeners()->add(new PlayerEnderInventoryListener($this->player->getEnderInventory()));
+		$player->ender_inventory_menu->getInventory()->getListeners()->add(new PlayerEnderInventoryListener($this->player->getEnderInventory()));
 	}
 
 	public function destroy(InvSeePlayer $player) : void{
-		if($this->player === null){
-			throw new LogicException("Tried to destroy in an un-constructed or an already-destroyed state");
-		}
-
-		$player->getLogger()->debug("Destroying online player instance: {$this->player->getName()}");
+		$this->player ??= throw new LogicException("Tried to destroy in an un-constructed or an already-destroyed state");
+		$player->logger->debug("Destroying online player instance: {$this->player->getName()}");
 
 		/** @var Inventory $inventory */
 		foreach([
@@ -64,8 +59,8 @@ final class OnlineInvSeePlayerHandler implements InvSeePlayerHandler{
 			$this->player->getArmorInventory(),
 			$this->player->getEnderInventory(),
 			$this->player->getOffHandInventory(),
-			$player->getInventoryMenu()->getInventory(),
-			$player->getEnderChestInventoryMenu()->getInventory()
+			$player->inventory_menu->getInventory(),
+			$player->ender_inventory_menu->getInventory()
 		] as $inventory){
 			$inventory->getListeners()->remove(...InvSeeListeners::find($inventory->getListeners()->toArray()));
 		}

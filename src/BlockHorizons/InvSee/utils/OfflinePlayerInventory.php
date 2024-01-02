@@ -12,17 +12,9 @@ use pocketmine\nbt\tag\ListTag;
 
 final class OfflinePlayerInventory{
 
-	public static function fromOfflinePlayerData(CompoundTag $data) : self{
-		return new self($data);
-	}
-
 	public function __construct(
-		private CompoundTag $data
+		readonly public CompoundTag $data
 	){}
-
-	public function getOfflinePlayerData() : CompoundTag{
-		return $this->data;
-	}
 
 	/**
 	 * @param array<int, Item> $inventory

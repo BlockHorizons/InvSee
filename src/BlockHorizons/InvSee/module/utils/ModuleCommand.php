@@ -61,25 +61,19 @@ final class ModuleCommand{
 	 * @param string[] $aliases
 	 */
 	public function __construct(
-		private string $name,
-		private string $usage,
-		private string $permission_name,
-		private string $permission_description,
-		private string $permission_accessibility,
-		private array $aliases
+		readonly public string $name,
+		readonly public string $usage,
+		readonly public string $permission_name,
+		readonly public string $permission_description,
+		readonly public string $permission_accessibility,
+		readonly public array $aliases
 	){}
-
-	public function getName() : string{
-		return $this->name;
-	}
 
 	public function setup(Loader $loader, CommandExecutor $executor) : PluginCommand{
 		// Permission registration
 		$permission_manager = PermissionManager::getInstance();
 		$command_permission = new Permission($this->permission_name, $this->permission_description);
-		if(!$permission_manager->addPermission($command_permission)){
-			throw new RuntimeException("Permission {$command_permission->getName()} is already registered");
-		}
+		$permission_manager->addPermission($command_permission) || throw new RuntimeException("Permission {$command_permission->getName()} is already registered");
 		ModuleUtils::assignPermissionDefault($command_permission, $this->permission_accessibility);
 		$this->permission = $command_permission;
 

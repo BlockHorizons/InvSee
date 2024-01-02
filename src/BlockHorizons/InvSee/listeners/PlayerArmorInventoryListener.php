@@ -11,7 +11,7 @@ use pocketmine\item\Item;
 final class PlayerArmorInventoryListener implements InvSeeListener{
 
 	public function __construct(
-		private Inventory $inventory
+		readonly private Inventory $inventory
 	){}
 
 	public function onContentChange(Inventory $inventory, array $old_contents) : void{

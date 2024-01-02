@@ -6,6 +6,7 @@ namespace BlockHorizons\InvSee\module\utils;
 
 use Closure;
 use InvalidArgumentException;
+use pocketmine\event\Event;
 use pocketmine\event\HandlerListManager;
 use pocketmine\permission\DefaultPermissions;
 use pocketmine\permission\Permission;
@@ -26,7 +27,7 @@ final class ModuleUtils{
 	}
 
 	/**
-	 * @template TEvent of \pocketmine\event\Event
+	 * @template TEvent of Event
 	 * @param class-string<TEvent> $event_class
 	 * @param int $priority
 	 * @param Closure(TEvent) : void $event_handler

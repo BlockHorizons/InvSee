@@ -45,24 +45,18 @@ final class Loader extends PluginBase{
 			assert($command_player_selector instanceof PlayerSelector);
 
 			$command = $this->getCommand("invsee");
-			if(!($command instanceof PluginCommand)){
-				throw new RuntimeException("Command \"invsee\" is not registered");
-			}
+			$command instanceof PluginCommand || throw new RuntimeException("Command \"invsee\" is not registered");
 			$command->setExecutor(new InvSeeCommandExecutor($this->player_list, $command_player_selector));
 
 			$command = $this->getCommand("enderinvsee");
-			if(!($command instanceof PluginCommand)){
-				throw new RuntimeException("Command \"enderinvsee\" is not registered");
-			}
+			$command instanceof PluginCommand || throw new RuntimeException("Command \"enderinvsee\" is not registered");
 			$command->setExecutor(new EnderInvSeeCommandExecutor($this->player_list, $command_player_selector));
 
 			$this->module_manager = new ModuleManager($this);
 			$this->module_manager->init();
 
 			$command = $this->getCommand("invseemodule");
-			if(!($command instanceof PluginCommand)){
-				throw new RuntimeException("Command \"invseemodule\" is not registered");
-			}
+			$command instanceof PluginCommand || throw new RuntimeException("Command \"invseemodule\" is not registered");
 			$command->setExecutor(new InvSeeModuleCommandExecutor($this->module_manager));
 		}catch(ConfigurationException $e){
 			$this->onConfigurationException($e);
@@ -74,7 +68,7 @@ final class Loader extends PluginBase{
 	}
 
 	public function onConfigurationException(ConfigurationException $exception) : void{
-		$this->getLogger()->error("Configuration property \"{$exception->getOffset()}\" is undefined in {$exception->getFileName()}");
+		$this->getLogger()->error("Configuration property \"{$exception->offset}\" is undefined in {$exception->file_name}");
 		if($exception->getMessage() !== ""){
 			$this->getLogger()->warning($exception->getMessage());
 		}

@@ -13,9 +13,9 @@ final class ModuleInfo{
 	 * @param class-string<Module> $module_class
 	 */
 	public function __construct(
-		public string $identifier,
-		public string $name,
-		public string $description,
-		public string $module_class
+		readonly public string $identifier,
+		readonly public string $name,
+		readonly public string $description,
+		readonly public string $module_class
 	){}
 }

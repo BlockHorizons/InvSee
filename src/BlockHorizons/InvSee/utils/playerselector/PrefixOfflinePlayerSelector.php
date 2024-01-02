@@ -13,9 +13,13 @@ use function strlen;
 use function strtolower;
 use const PHP_INT_MAX;
 
+/**
+ * PlayerSelector implementation that selects offline player by their name prefix, or falls back to input. This selector
+ * goes through file names in /players/ directory.
+ */
 final class PrefixOfflinePlayerSelector implements PlayerSelector{
 
-	private string $path;
+	readonly private string $path;
 
 	public function __construct(Server $server){
 		$this->path = Path::join($server->getDataPath(), "players");

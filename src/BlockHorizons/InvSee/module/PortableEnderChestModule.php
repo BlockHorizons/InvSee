@@ -38,7 +38,7 @@ final class PortableEnderChestModule implements Module, CommandExecutor{
 	private array $viewing = [];
 
 	public function __construct(
-		private ModuleCommand $command
+		readonly private ModuleCommand $command
 	){}
 
 	public function onEnable(Loader $loader) : void{
@@ -76,7 +76,7 @@ final class PortableEnderChestModule implements Module, CommandExecutor{
 			return true;
 		}
 
-		$menu = $this->loader->getPlayerList()->getOrCreate($sender->getName())->getEnderChestInventoryMenu();
+		$menu = $this->loader->getPlayerList()->getOrCreate($sender->getName())->ender_inventory_menu;
 		$this->viewing[$uuid] = spl_object_id($menu->getInventory());
 		$menu->send($sender, "Ender Chest", function(bool $success) use($uuid) : void{
 			if(!$success){

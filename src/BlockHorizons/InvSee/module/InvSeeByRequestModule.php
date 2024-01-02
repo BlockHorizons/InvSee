@@ -70,24 +70,18 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 	private array $access_expiry_player_viewing = [];
 
 	public function __construct(
-		private string $request_command_name,
-		private string $request_command_permission,
-		private string $request_command_permission_accessibility,
-		private string $grant_command_name,
-		private string $grant_command_permission,
-		private string $grant_command_permission_accessibility,
-		private float $request_timeout,
-		private float $grant_timeout
+		readonly private string $request_command_name,
+		readonly private string $request_command_permission,
+		readonly private string $request_command_permission_accessibility,
+		readonly private string $grant_command_name,
+		readonly private string $grant_command_permission,
+		readonly private string $grant_command_permission_accessibility,
+		readonly private float $request_timeout,
+		readonly private float $grant_timeout
 	){
-		if($this->request_command_name === $this->grant_command_name){
-			throw new InvalidArgumentException("Request command name and grant command name must not be the same");
-		}
-		if($this->request_timeout < 0.0){
-			throw new InvalidArgumentException("Request timeout cannot be less than 0.0");
-		}
-		if($this->grant_timeout < 0.0){
-			throw new InvalidArgumentException("Grant timeout cannot be less than 0.0");
-		}
+		$this->request_command_name === $this->grant_command_name || throw new InvalidArgumentException("Request command name and grant command name must not be the same");
+		$this->request_timeout < 0.0 || throw new InvalidArgumentException("Request timeout cannot be less than 0.0");
+		$this->grant_timeout < 0.0 || throw new InvalidArgumentException("Grant timeout cannot be less than 0.0");
 	}
 
 	/**
@@ -99,13 +93,9 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 	 */
 	private function getCommandExecutor(Loader $loader, string $command_name, string $executor_class) : CommandExecutor{
 		$command = $loader->getCommand($command_name);
-		if(!($command instanceof PluginCommand)){
-			throw new RuntimeException("Command \"{$command_name}\" is not registered");
-		}
+		$command instanceof PluginCommand || throw new RuntimeException("Command \"{$command_name}\" is not registered");
 		$inv_see_command_executor = $command->getExecutor();
-		if(!($inv_see_command_executor instanceof $executor_class)){
-			throw new RuntimeException("Command \"{$command_name}\" 's executor is not {$executor_class}");
-		}
+		$inv_see_command_executor instanceof $executor_class || throw new RuntimeException("Command \"{$command_name}\" 's executor is not {$executor_class}");
 		return $inv_see_command_executor;
 	}
 
@@ -124,12 +114,12 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 		$player_data = $this->loader->getPlayerList()->get($viewing);
 		if(
 			$player_data !== null && (
-				$player_data->getInventoryMenu()->getInventory() === $viewing_inventory ||
-				$player_data->getEnderChestInventoryMenu()->getInventory() === $viewing_inventory
+				$player_data->inventory_menu->getInventory() === $viewing_inventory ||
+				$player_data->ender_inventory_menu->getInventory() === $viewing_inventory
 			)
 		){
 			$player->removeCurrentWindow();
-			$player->sendMessage(TextFormat::RED . "You may no longer view {$player_data->getPlayer()}'s inventory.");
+			$player->sendMessage(TextFormat::RED . "You may no longer view {$player_data->player}'s inventory.");
 		}
 
 		$this->logger->debug("Revoked {$player->getName()} from accessing {$viewing}");
@@ -178,15 +168,11 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 		// Permission registration
 		$permission_manager = PermissionManager::getInstance();
 		$request_command_permission = new Permission($this->request_command_permission, "Grants permission to /{$this->request_command_name} command");
-		if(!$permission_manager->addPermission($request_command_permission)){
-			throw new RuntimeException("Permission {$request_command_permission->getName()} is already registered");
-		}
+		$permission_manager->addPermission($request_command_permission) || throw new RuntimeException("Permission {$request_command_permission->getName()} is already registered");
 		ModuleUtils::assignPermissionDefault($request_command_permission, $this->request_command_permission_accessibility);
 
 		$grant_command_permission = new Permission($this->grant_command_permission, "Grants permission to /{$this->grant_command_permission} command");
-		if(!$permission_manager->addPermission($grant_command_permission)){
-			throw new RuntimeException("Permission {$grant_command_permission->getName()} is already registered");
-		}
+		$permission_manager->addPermission($grant_command_permission) || throw new RuntimeException("Permission {$grant_command_permission->getName()} is already registered");
 		ModuleUtils::assignPermissionDefault($grant_command_permission, $this->grant_command_permission_accessibility);
 
 
@@ -215,11 +201,11 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 		$this->checker = function(Player $player, string $viewing) : ?bool{
 			return $this->hasPlayerPermission($player, $viewing) ? true : null;
 		};
-		$this->getCommandExecutor($loader, "invsee", InvSeeCommandExecutor::class)->getViewPermissionChecker()->register($this->checker, -1);
-		$this->getCommandExecutor($loader, "enderinvsee", EnderInvSeeCommandExecutor::class)->getViewPermissionChecker()->register($this->checker, -1);
+		$this->getCommandExecutor($loader, "invsee", InvSeeCommandExecutor::class)->view_permission_checker->register($this->checker, -1);
+		$this->getCommandExecutor($loader, "enderinvsee", EnderInvSeeCommandExecutor::class)->view_permission_checker->register($this->checker, -1);
 
 		$this->loader = $loader;
-		$this->logger = new PrefixedLogger($loader->getModuleManager()->getLogger(), "InvSee by Request");
+		$this->logger = new PrefixedLogger($loader->getModuleManager()->logger, "InvSee by Request");
 	}
 
 	public function onDisable(Loader $loader) : void{
@@ -238,8 +224,8 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 		$command_manager->unregister($command_manager->getCommand($this->request_command_name) ?? throw new RuntimeException("Cannot retrieve command: /{$this->request_command_name}"));
 		$command_manager->unregister($command_manager->getCommand($this->grant_command_name) ?? throw new RuntimeException("Cannot retrieve command: /{$this->grant_command_name}"));
 
-		$this->getCommandExecutor($loader, "invsee", InvSeeCommandExecutor::class)->getViewPermissionChecker()->unregister($this->checker);
-		$this->getCommandExecutor($loader, "enderinvsee", EnderInvSeeCommandExecutor::class)->getViewPermissionChecker()->unregister($this->checker);
+		$this->getCommandExecutor($loader, "invsee", InvSeeCommandExecutor::class)->view_permission_checker->unregister($this->checker);
+		$this->getCommandExecutor($loader, "enderinvsee", EnderInvSeeCommandExecutor::class)->view_permission_checker->unregister($this->checker);
 
 		$this->revoker?->cancel();
 		$this->revoker = null;

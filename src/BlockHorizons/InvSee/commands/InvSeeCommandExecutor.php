@@ -16,14 +16,14 @@ use function implode;
 
 final class InvSeeCommandExecutor implements CommandExecutor{
 
-	private InvViewPermissionChecker $view_permission_checker;
+	readonly public InvViewPermissionChecker $view_permission_checker;
 
 	public function __construct(
-		private InvSeePlayerList $player_list,
-		private PlayerSelector $player_selector
+		readonly private InvSeePlayerList $player_list,
+		readonly private PlayerSelector $player_selector
 	){
 		$this->view_permission_checker = new InvViewPermissionChecker();
-		$this->getViewPermissionChecker()->register(static function(Player $player, string $viewing) : ?bool{
+		$this->view_permission_checker->register(static function(Player $player, string $viewing) : ?bool{
 			if(
 				!$player->hasPermission("invsee.inventory.view") &&
 				(strtolower($viewing) !== strtolower($player->getName()) || !$player->hasPermission("invsee.inventory.view.self"))
@@ -33,10 +33,6 @@ final class InvSeeCommandExecutor implements CommandExecutor{
 			}
 			return true;
 		}, 0);
-	}
-
-	public function getViewPermissionChecker() : InvViewPermissionChecker{
-		return $this->view_permission_checker;
 	}
 
 	public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool{
@@ -50,7 +46,7 @@ final class InvSeeCommandExecutor implements CommandExecutor{
 		}
 
 		$who = $this->player_selector->select(implode(" ", $args));
-		foreach($this->getViewPermissionChecker()->getAll() as $checker){
+		foreach($this->view_permission_checker->getAll() as $checker){
 			$result = $checker($sender, $who);
 			if($result === null){ // result = null
 				continue;
@@ -68,7 +64,7 @@ final class InvSeeCommandExecutor implements CommandExecutor{
 			return true;
 		}
 
-		$player->getInventoryMenu()->send($sender);
+		$player->inventory_menu->send($sender);
 		return true;
 	}
 }

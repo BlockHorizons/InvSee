@@ -15,8 +15,8 @@ use RuntimeException;
 
 final class ModuleManager{
 
-	private Configuration $config;
-	private Logger $logger;
+	readonly private Configuration $config;
+	readonly public Logger $logger;
 
 	/** @var array<string, ModuleInfo> */
 	private array $modules = [];
@@ -25,7 +25,7 @@ final class ModuleManager{
 	private array $enabled = [];
 
 	public function __construct(
-		private Loader $loader
+		readonly private Loader $loader
 	){
 		$this->register(new ModuleInfo(
 			"invsee-by-request",
@@ -56,10 +56,7 @@ final class ModuleManager{
 	}
 
 	public function register(ModuleInfo $info) : void{
-		if(isset($this->modules[$info->identifier])){
-			throw new InvalidArgumentException("A module with the identifier {$info->identifier} is already registered");
-		}
-
+		!isset($this->modules[$info->identifier]) || throw new InvalidArgumentException("A module with the identifier {$info->identifier} is already registered");
 		$this->modules[$info->identifier] = $info;
 	}
 
@@ -78,15 +75,8 @@ final class ModuleManager{
 		return $this->modules;
 	}
 
-	public function getLogger() : Logger{
-		return $this->logger;
-	}
-
 	public function isEnabled(ModuleInfo $info) : bool{
-		if(!isset($this->modules[$info->identifier])){
-			throw new RuntimeException("Invalid module: {$info->identifier}");
-		}
-
+		isset($this->modules[$info->identifier]) || throw new RuntimeException("Invalid module: {$info->identifier}");
 		return isset($this->enabled[$info->identifier]);
 	}
 
@@ -95,14 +85,8 @@ final class ModuleManager{
 	 * @param mixed[]|null $configuration
 	 */
 	public function enable(ModuleInfo $info, ?array $configuration = null) : void{
-		if(!isset($this->modules[$info->identifier])){
-			throw new RuntimeException("Invalid module: {$info->identifier}");
-		}
-
-		if(isset($this->enabled[$info->identifier])){
-			throw new RuntimeException("Module {$info->identifier} is already enabled");
-		}
-
+		isset($this->modules[$info->identifier]) || throw new RuntimeException("Invalid module: {$info->identifier}");
+		!isset($this->enabled[$info->identifier]) || throw new RuntimeException("Module {$info->identifier} is already enabled");
 		try{
 			$module = $info->module_class::fromConfiguration($configuration ?? $this->config[$info->identifier]);
 		}catch(ConfigurationException $e){
@@ -116,14 +100,8 @@ final class ModuleManager{
 	}
 
 	public function disable(ModuleInfo $info) : void{
-		if(!isset($this->modules[$info->identifier])){
-			throw new RuntimeException("Invalid module: {$info->identifier}");
-		}
-
-		if(!isset($this->enabled[$info->identifier])){
-			throw new RuntimeException("Module {$info->identifier} is already disabled");
-		}
-
+		isset($this->modules[$info->identifier]) || throw new RuntimeException("Invalid module: {$info->identifier}");
+		isset($this->enabled[$info->identifier]) || throw new RuntimeException("Module {$info->identifier} is already disabled");
 		$this->enabled[$info->identifier]->onDisable($this->loader);
 		unset($this->enabled[$info->identifier]);
 		$this->logger->debug("Disabled module: {$info->identifier}");

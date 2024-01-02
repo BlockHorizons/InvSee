@@ -27,9 +27,9 @@ final class Configuration implements ArrayAccess{
 	 * @param array<string> $parents
 	 */
 	public function __construct(
-		private string $file_name,
-		private array $configuration,
-		private array $parents = []
+		readonly private string $file_name,
+		readonly private array $configuration,
+		readonly private array $parents = []
 	){}
 
 	public function offsetExists(mixed $offset) : bool{

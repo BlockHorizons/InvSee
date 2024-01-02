@@ -74,7 +74,7 @@ final class InvCombiner{
 	 * @param array<int, Item> $inventory
 	 */
 	private static function decorate(array &$inventory) : void{
-		$glass_pane = VanillaBlocks::STAINED_GLASS_PANE()->setColor(DyeColor::BLACK());
+		$glass_pane = VanillaBlocks::STAINED_GLASS_PANE()->setColor(DyeColor::BLACK);
 		$inventory[45] = $glass_pane->asItem()->setCustomName(" ");
 		$inventory[46] = $glass_pane->asItem()->setCustomName(TextFormat::RESET . TextFormat::AQUA . "Helmet ->");
 		$inventory[49] = $glass_pane->asItem()->setCustomName(TextFormat::RESET . TextFormat::AQUA . "<- Chestplate | Leggings ->");

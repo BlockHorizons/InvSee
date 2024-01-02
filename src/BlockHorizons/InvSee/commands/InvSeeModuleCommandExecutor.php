@@ -16,7 +16,7 @@ use function implode;
 final class InvSeeModuleCommandExecutor implements CommandExecutor{
 
 	public function __construct(
-		private ModuleManager $manager
+		readonly private ModuleManager $manager
 	){}
 
 	private function getModule(CommandSender $sender, string $identifier) : ?ModuleInfo{

@@ -10,6 +10,7 @@ use Logger;
 use pocketmine\player\Player;
 use pocketmine\Server;
 use PrefixedLogger;
+use function strtolower;
 
 final class InvSeePlayerList{
 
@@ -40,12 +41,8 @@ final class InvSeePlayerList{
 	}
 
 	private function create(string $player) : InvSeePlayer{
-		if(isset($this->players[$name = strtolower($player)])){
-			throw new InvalidArgumentException("Attempted to create a duplicate player");
-		}
-
+		!isset($this->players[$name = strtolower($player)]) || throw new InvalidArgumentException("Attempted to create a duplicate player");
 		$this->logger->debug("Creating session: {$name}");
-
 		$instance = new InvSeePlayer($player, new PrefixedLogger($this->logger, $name));
 		$instance->init($this);
 		$this->players[$name] = $instance;
@@ -71,7 +68,7 @@ final class InvSeePlayerList{
 	}
 
 	public function destroy(InvSeePlayer $player) : void{
-		if(isset($this->players[$name = strtolower($player->getPlayer())])){
+		if(isset($this->players[$name = strtolower($player->player)])){
 			$this->logger->debug("Destroying session: {$name}");
 			unset($this->players[$name]);
 			$player->destroy();
@@ -90,8 +87,8 @@ final class InvSeePlayerList{
 		if(isset($this->players[$name = strtolower($player_name)])){
 			$player = $this->players[$name];
 			if(
-				count($player->getEnderChestInventoryMenu()->getInventory()->getViewers()) === 0 &&
-				count($player->getInventoryMenu()->getInventory()->getViewers()) === 0
+				count($player->ender_inventory_menu->getInventory()->getViewers()) === 0 &&
+				count($player->inventory_menu->getInventory()->getViewers()) === 0
 			){
 				$this->destroy($player);
 			}
