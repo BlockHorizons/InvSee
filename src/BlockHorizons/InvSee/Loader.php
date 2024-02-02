@@ -37,11 +37,11 @@ final class Loader extends PluginBase{
 			$this->player_list->init($this);
 
 			$config = Configuration::fromConfig($this->getConfig());
-			$command_player_selector = match ($config["command-player-selector-type"]) {
+			$command_player_selector = match ($config->get("command-player-selector-type")) {
 				"exact" => new ExactPlayerSelector(),
 				"prefix-online" => new PrefixOnlinePlayerSelector($this->getServer()),
 				"prefix-offline" => new PrefixOfflinePlayerSelector($this->getServer()),
-				default => $config->throwUndefinedConfiguration("command-player-selector-type", "Value of the property must be one of: exact, prefix-online, prefix-offline")
+				default => $config->throwUndefinedConfiguration(["command-player-selector-type"], "Value of the property must be one of: exact, prefix-online, prefix-offline")
 			};
 			assert($command_player_selector instanceof PlayerSelector);
 

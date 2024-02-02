@@ -46,11 +46,11 @@ final class ModuleManager{
 	}
 
 	public function init() : void{
-		foreach($this->config["module-states"] as $identifier => $state){
+		foreach($this->config->get("module-states") as $identifier => $state){
 			if($state === "enabled"){
 				$this->enable($this->get($identifier));
 			}elseif($state !== "disabled"){
-				$this->config->throwUndefinedConfiguration($identifier, "State must be either \"enabled\" or \"disabled\", got \"{$state}\" for module {$identifier}");
+				$this->config->throwUndefinedConfiguration(["module-states", $identifier], "State must be either \"enabled\" or \"disabled\", got \"{$state}\" for module {$identifier}");
 			}
 		}
 	}
@@ -84,7 +84,7 @@ final class ModuleManager{
 		isset($this->modules[$info->identifier]) || throw new RuntimeException("Invalid module: {$info->identifier}");
 		!isset($this->enabled[$info->identifier]) || throw new RuntimeException("Module {$info->identifier} is already enabled");
 		try{
-			$module = $info->module_class::fromConfiguration($configuration ?? $this->config[$info->identifier]);
+			$module = $info->module_class::fromConfiguration($configuration ?? $this->config->getConfig($info->identifier));
 		}catch(ConfigurationException $e){
 			$this->loader->onConfigurationException($e);
 			return;

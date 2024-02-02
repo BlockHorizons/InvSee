@@ -39,14 +39,14 @@ final class InvSeeByRequestModule implements Module, CommandExecutor{
 
 	public static function fromConfiguration(Configuration $configuration) : Module{
 		return new self(
-			$configuration["request-command"]["name"],
-			$configuration["request-command"]["permission"]["name"],
-			$configuration["request-command"]["permission"]["access"],
-			$configuration["grant-command"]["name"],
-			$configuration["grant-command"]["permission"]["name"],
-			$configuration["grant-command"]["permission"]["access"],
-			$configuration["request-timeout"],
-			$configuration["grant-timeout"]
+			$configuration->get("request-command", "name"),
+			$configuration->get("request-command", "permission", "name"),
+			$configuration->get("request-command", "permission", "access"),
+			$configuration->get("grant-command", "name"),
+			$configuration->get("grant-command", "permission", "name"),
+			$configuration->get("grant-command", "permission", "access"),
+			$configuration->get("request-timeout"),
+			$configuration->get("grant-timeout")
 		);
 	}
 

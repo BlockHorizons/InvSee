@@ -22,10 +22,10 @@ final class PortableEnderChestModule implements Module, CommandExecutor{
 
 	public static function fromConfiguration(Configuration $configuration) : Module{
 		return new self(
-			ModuleCommand::parse($configuration["command"], new Configuration($configuration->getFileName(), [
-				"usage" => "/{$configuration["command"]["name"]} - Access your ender chest",
-				"permission" => ["description" => "Grants permission to /{$configuration["command"]["name"]} command"]
-			]))
+			ModuleCommand::parse($configuration->getConfig("command"), new Configuration($configuration->file_name, [
+				"usage" => "/{$configuration->get("command", "name")} - Access your ender chest",
+				"permission" => ["description" => "Grants permission to /{$configuration->get("command", "name")} command"]
+			], $configuration->offset))
 		);
 	}
 

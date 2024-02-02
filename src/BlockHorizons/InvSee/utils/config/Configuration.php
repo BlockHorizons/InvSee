@@ -4,37 +4,27 @@ declare(strict_types=1);
 
 namespace BlockHorizons\InvSee\utils\config;
 
-use ArrayAccess;
 use pocketmine\utils\Config;
-use RuntimeException;
-use function array_key_exists;
+use function array_push;
 use function basename;
 use function implode;
-use function is_array;
 
-/**
- * @implements ArrayAccess<int|string, mixed>
- */
-final class Configuration implements ArrayAccess{
+final class Configuration{
 
 	public static function fromConfig(Config $config) : self{
-		return new self(basename($config->getPath()), $config->getAll());
+		return new self(basename($config->getPath()), $config->getAll(), []);
 	}
 
 	/**
 	 * @param string $file_name
 	 * @param array<int|string, mixed> $configuration
-	 * @param list<string> $parents
+	 * @param list<int|string> $offset
 	 */
 	public function __construct(
-		readonly private string $file_name,
-		readonly private array $configuration,
-		readonly private array $parents = []
+		readonly public string $file_name,
+		readonly public array $configuration,
+		readonly public array $offset
 	){}
-
-	public function getFileName() : string{
-		return $this->file_name;
-	}
 
 	/**
 	 * @return array<int|string, mixed>
@@ -43,31 +33,31 @@ final class Configuration implements ArrayAccess{
 		return $this->configuration;
 	}
 
-	public function offsetExists(mixed $offset) : bool{
-		return array_key_exists($offset, $this->configuration);
-	}
-
-	public function offsetGet(mixed $offset) : mixed{
-		array_key_exists($offset, $this->configuration) || $this->throwUndefinedConfiguration($offset);
-		if(is_array($this->configuration[$offset])){
-			return new self($this->file_name, $this->configuration[$offset], [...$this->parents, (string) $offset]);
+	public function get(int|string ...$keys) : mixed{
+		$value = $this->configuration;
+		$traversed = [];
+		foreach($keys as $index => $key){
+			$traversed[] = $index;
+			isset($value[$key]) || $this->throwUndefinedConfiguration($traversed);
+			$value = $value[$key];
 		}
-		return $this->configuration[$offset];
+		return $value;
 	}
 
-	public function offsetSet(mixed $offset, mixed $value) : never{
-		$this->throwInvalidOperation($offset ?? throw new RuntimeException("Offset cannot be null"), "Cannot write to configuration");
+	public function getConfig(int|string ...$keys) : self{
+		$offsets = $this->offset;
+		array_push($offsets, ...$keys);
+		return new self($this->file_name, $this->get(...$keys), $offsets);
 	}
 
-	public function offsetUnset(mixed $offset) : never{
-		$this->throwInvalidOperation($offset, "Cannot modify configuration");
-	}
-
-	public function throwInvalidOperation(int|string $offset, string $message = "") : never{
-		throw new InvalidOperationConfigurationException($this->file_name, $offset, $message);
-	}
-
-	public function throwUndefinedConfiguration(int|string $offset, string $message = "") : never{
-		throw new UndefinedConfigurationException($this->file_name, implode(".", [...$this->parents, $offset]), $message);
+	/**
+	 * @param array<int|string> $offset
+	 * @param string $message
+	 * @return never
+	 */
+	public function throwUndefinedConfiguration(array $offset, string $message = "") : never{
+		$offsets = $this->offset;
+		array_push($offsets, ...$offset);
+		throw new UndefinedConfigurationException($this->file_name, implode(".", $offsets), $message);
 	}
 }
