@@ -2,7 +2,7 @@ name: InvSee
 author: BlockHorizons
 main: BlockHorizons\InvSee\Loader
 api: 5.27.0
-version: 2.4.2
+version: 2.4.3
 commands:
   invsee:
     description: View a player's inventory
