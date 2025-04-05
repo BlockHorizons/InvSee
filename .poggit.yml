@@ -7,6 +7,6 @@ projects:
     icon: icon.png
     libs:
       - src: muqsit/InvMenu/InvMenu
-        version: ^4.6.3
+        version: ^4.6.6
         branch: pm5
 ...
