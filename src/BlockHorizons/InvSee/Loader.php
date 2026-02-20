@@ -19,6 +19,7 @@ use muqsit\invmenu\InvMenuHandler;
 use pocketmine\command\PluginCommand;
 use pocketmine\plugin\PluginBase;
 use pocketmine\YmlServerProperties;
+use bStats\PocketmineMp\Metrics;
 use RuntimeException;
 use function assert;
 
@@ -32,6 +33,7 @@ final class Loader extends PluginBase{
 	}
 
 	protected function onEnable() : void{
+		new Metrics($this, 29647);
 		$this->initVirions();
 		try{
 			$this->player_list->init($this);
